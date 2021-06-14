@@ -1,0 +1,55 @@
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+	"name": "Google Meet Facial Attendance",
+	"version": "1.3",
+	"description": "Monitor who attendant your class using this extension",
+	"background": {
+		"scripts": ["js/listeners.js"],
+		"persistent": false
+	},
+	"web_accessible_resources": [
+		"js/inject.js",
+		"models/face_expression_model-weights_manifest.json",
+        "models/face_landmark_68_model-weights_manifest.json",
+        "models/face_landmark_68_tiny_model-weights_manifest.json",
+        "models/face_recognition_model-weights_manifest.json",
+        "models/tiny_face_detector_model-weights_manifest.json",
+        "models/face_expression_model-shard1",
+        "models/face_landmark_68_model-shard1",
+        "models/face_landmark_68_tiny_model-shard1",
+        "models/face_recognition_model-shard1",
+        "models/face_recognition_model-shard2",
+        "models/tiny_face_detector_model-shard1"
+	],
+	"content_scripts": [
+		{
+			"matches": ["*://meet.google.com/**-**-**"],
+			"js": [
+				"js/lib/face-api.min.js",
+				"js/contentScript.js", 
+				"js/classButtons.js", 
+				"js/tagbox-logic.js", 
+				"js/html-templates.js", 
+				"js/translations.js"],
+			"css": ["css/style.css"]
+		}
+	],
+	"permissions": ["storage", "tabs"],
+	"icons": {
+          "16": "./img/Attendance16.png",
+          "32": "./img/Attendance32.png",
+          "64": "./img/Attendance64.png",
+          "128": "./img/Attendance128.png"
+      },
+	"browser_action": {
+        "default_icon": {
+            "16": "./img/Attendance16.png",
+            "32": "./img/Attendance32.png",
+            "64": "./img/Attendance64.png",
+            "128": "./img/Attendance128.png"
+        },
+		"default_popup": "html/popup.html"
+	},
+	"manifest_version": 2
+}

@@ -1,0 +1,56 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+  
+.popup-container {
+    width: 200px;
+    height: auto;
+    font-family: "Times New Roman", Times, serif;
+    padding: 1em 0.5em;
+}
+  
+.popup-name {
+    text-align: center;
+    margin-left: auto;
+    letter-spacing: 1.5px;
+    font-weight: 1000;
+    margin: 0;
+}
+  
+.buttons {
+    display: flex;
+    flex-direction: column;
+}
+  
+.popup-container button {
+    font-family: inherit;
+    font-size: 20px;
+    padding: 0.3em 0.2em;
+    margin-top: 0.8em;
+    border: none;
+    border-radius: 10px;
+}
+  
+.popup-add-class {
+    background: #00796b;
+    color: white;
+}
+  
+.popup-del-class {
+    background: #c5221f;
+    color: white;
+}
+  
+.separator {
+    border-top: 1px solid rgba(0,0,0,0.12);
+    margin: 7px 0;
+}
+  
+.hover-state:hover{
+    filter: brightness(90%);
+}
+
+canvas {
+    position: absolute;
+}
