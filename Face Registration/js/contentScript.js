@@ -1,3 +1,7 @@
+const state = {
+    btnOnClick: false,
+};
+
 // Initialize when meeting starts
 const readyObserver = new MutationObserver(function (mutations, me) {
     if (document.getElementsByClassName('c8mVDd')[0]) {
@@ -13,7 +17,6 @@ readyObserver.observe(document.getElementsByClassName('crqnQb')[0], {
     subtree: true,
 });
 
-
 //Globals
 const sessionStorage = window.sessionStorage;
 sessionStorage.setItem('joined', JSON.stringify({}));
@@ -26,6 +29,7 @@ chrome.storage.sync.get(null, function(result) {
         chrome.storage.sync.set({'lang': 'en'}, null);
     }
 });
+
 var updatedObserver = undefined;
 var savedIndexSelectedClass = 1;
 var savedTimeChoosenStartTime = getCurrentTime();
@@ -39,7 +43,120 @@ function initialize() {
         },
         function (response) {
             if (response.ready) {
+
+                alert("Welcome to google meet, you are using Google Meet Facial Attendance")
+                insertAttendanceSwitch();
                 // Create divs and buttons
+
+                // document
+                //     .querySelector('.r6xAKc')
+                //     .insertAdjacentHTML('afterend', buttonHTML)
+                
+                const panelContainer = document.querySelector('.R3Gmyc.qwU8Me')
+                document
+                    .querySelector('[jsname="HlFzId"]')
+                    .insertAdjacentHTML('afterend', panelHTML)
+                const attendancePanel = document.getElementById('panel')
+
+                const ariaPressedObserver = new MutationObserver(
+                    (mutations, me) => {
+                        mutations[0].target.setAttribute('aria-pressed', false)
+                        me.disconnect()
+                    }
+                )
+                const ariaPressedObserverOptions = {
+                    attributes: true,
+                    attributeFilter: ['aria-pressed'],
+                    attributeOldValue: true,
+                }
+                const panelUnhiddenObserver = new MutationObserver(
+                    (mutations, me) => {
+                        const mutation = mutations[0]
+                        const target = mutation.target
+                        if (
+                            mutation.oldValue.includes('qdulke') &&
+                            !target.classList.contains('qdulke')
+                        ) {
+                            target.classList.add('qdulke')
+                            attendancePanel.classList.remove('qdulke')
+                            me.disconnect()
+                        }
+                    }
+                )
+                const panelSpawnedObserver = new MutationObserver(
+                    (mutations, me) => {
+                        const mutation = mutations[0]
+                        if (mutation.addedNodes.length > 0) {
+                            const addedNode = mutation.addedNodes[0]
+                            if (addedNode.getAttribute('data-tab-id') === '5') {
+                                addedNode.classList.add('qdulke')
+                                attendancePanel.classList.remove('qdulke')
+                                me.disconnect()
+                            }
+                        }
+                    }
+                )
+
+                document
+                    .querySelector('.r6xAKc')
+                    .insertAdjacentHTML('afterend', buttonHTML)
+                const infoButton = document.querySelector('.r6xAKc button')
+                definePressedProperty(infoButton)
+                const attendanceButton = document.getElementById('attendance')
+                definePressedProperty(attendanceButton)
+                infoButton.addEventListener('click', (event) => {
+                    if (!infoButton.pressed) {
+                        if (!attendanceButton.pressed) {
+                            ariaPressedObserver.observe(
+                                attendanceButton,
+                                ariaPressedObserverOptions
+                            )
+                        } else {
+                            event.stopPropagation()
+                            infoButton.pressed = true
+                            document
+                                .querySelector('[data-tab-id="5"]')
+                                .classList.remove('qdulke')
+                            attendanceButton.pressed = false
+                            attendancePanel.classList.add('qdulke')
+                        }
+                    }
+                })
+                attendanceButton.addEventListener('click', (event) => {
+                    if (!attendanceButton.pressed) {
+                        const infoPanel =
+                            document.querySelector('[data-tab-id="5"]')
+                        if (infoPanel === null) {
+                            panelSpawnedObserver.observe(panelContainer, {
+                                childList: true,
+                            })
+                        } else {
+                            panelUnhiddenObserver.observe(
+                                document.querySelector('[data-tab-id="5"]'),
+                                {
+                                    attributes: true,
+                                    attributeFilter: ['class'],
+                                    attributeOldValue: true,
+                                }
+                            )
+                        }
+                        if (!infoButton.pressed) {
+                            ariaPressedObserver.observe(
+                                infoButton,
+                                ariaPressedObserverOptions
+                            )
+                        } else {
+                            event.stopPropagation()
+                            infoButton.pressed = false
+                            document
+                                .querySelector('[data-tab-id="5"]')
+                                .classList.add('qdulke')
+                            attendanceButton.pressed = true
+                            attendancePanel.classList.remove('qdulke')
+                        }
+                    }
+                })
+                
                 const screen = document.getElementsByClassName('crqnQb')[0];
 
                 screen.insertAdjacentHTML('afterbegin', classHTML);
@@ -53,16 +170,22 @@ function initialize() {
 
                 // Adding functions to buttons
                 document.getElementById('Ok').addEventListener('click', createNewClass, false);
+                document.getElementById('Ok-track').addEventListener('click', saveAttendance, false);
                 document.querySelectorAll('.Cancel').forEach((element) => {
                     element.addEventListener('click', cancelCard, false);
                 });
-                document.getElementById('ICP').addEventListener('click', injectCurrentParticipants, false);
+
+                //For card 1 and card 2 function listener
+                document.getElementById('ICP').addEventListener('click', facialRegistration, false);
+                document.getElementById('TP').addEventListener('click', takeFacialPhoto, false);
+                document.getElementById('SCF').addEventListener('click', facialAttendance, false);
+                
                 //document.getElementById('tag-input').addEventListener('keyup', addNewTag, false);
                 document.querySelector('.tag-container').addEventListener('click', focusOnInput, false);
                 document.addEventListener('click', deleteTagCheck, false);
 
-                document.getElementById('Edit').addEventListener('click', editChoice, false);
-                document.getElementById('Delete').addEventListener('click', deleteChoice, false);
+                // document.getElementById('Edit').addEventListener('click', editChoice, false);
+                // document.getElementById('Delete').addEventListener('click', deleteChoice, false);
 
                 const tempButton = document.querySelector('.NzPR9b').firstElementChild;
                 tempButton.addEventListener('click', AddHTMLCard, false);
@@ -73,6 +196,7 @@ function initialize() {
     );
 }
 
+// Display duplicate screen on google meet
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     console.log (request);
     switch(request.data) {
@@ -81,12 +205,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             break;
         }
         case 'add-class': {
+            alert("Please Enter Full Name and Student ID as Registered in Student Intranet \nFormat of Input: \r\nName: XXXX XXXX XXXX \r\nStudent ID: XXWMRXXXXX")
             document.getElementById('card1').style.visibility = 'visible';
             break;
         }
         case 'edit-class': {
+            alert("Please Show your face in front of camera with enough light source")
             document.getElementById('card2').style.visibility = 'visible';
-            updateChoiceBox('card2');
+            // updateChoiceBox('card2');
             break;
         }
         case 'del-class': {
@@ -332,3 +458,32 @@ window.addEventListener('message', (event) => {
         }
     }
 });
+
+function insertAttendanceSwitch(){
+	let ln = document.querySelectorAll( '[data-show-automatic-dialog]' ).length
+	let btn = document.createElement( 'span' );
+	btn.textContent = '✔';
+	btn.id = 'show-gma-attendance-fields'
+	btn.title = 'Download Attendance Tracked'
+	document.querySelectorAll( '[data-show-automatic-dialog]' )[ln-1].parentElement.parentElement.appendChild(btn)
+	document.getElementById( 'show-gma-attendance-fields' ).addEventListener( 'click' , showAttendance, false);    
+}
+
+function showAttendance( e ){
+	let vis = state.btnOnClick
+
+	if(vis === false){
+        state.btnOnClick = true
+        displayAttendanceList();
+		document.getElementById( "show-gma-attendance-fields" ).classList.add( 'showing' )
+	}
+	else{
+        state.btnOnClick = false
+		document.getElementById( "show-gma-attendance-fields" ).classList.remove( 'showing' )
+	}
+	
+	e = e || window.event;
+	e.preventDefault();
+	e.stopPropagation()
+}
+

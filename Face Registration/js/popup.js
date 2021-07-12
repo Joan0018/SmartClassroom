@@ -1,4 +1,4 @@
- document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		if (!tabs[0].url.match(/https:\/\/meet.google.com\/.+-.+-.+/)) return;
 

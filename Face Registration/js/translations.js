@@ -9,11 +9,14 @@ const meetLanguage = {
 		},
 		classHTML: {
 			new_class_name: 'Register Students face',
-			input_name_class_name: 'Student Name',
+			input_name_student_name: 'Name',
+			input_name_student_id: 'Student ID',
 			student_names: 'Please put your face in front of camera',
 			ICP: 'Start Capture Face', // ICP - "Inject current participants"
+			TP: 'Take Photo',
 			Cancel: 'Cancel',
 			Ok: 'Save',
+
 		},
 		attendanceHTML: {
 			card_title_2: 'Attendance',
@@ -24,10 +27,10 @@ const meetLanguage = {
 			save_button: 'Export',
 		},
 		updateHTML: {
-			name_2: 'Select Class',
-			Cancel_2: 'Cancel',
-			Edit: 'Edit',
-			Delete: 'Delete'
+			name_2: 'Taking Attendance',
+			Ok: 'Save',
+			Cancel: 'Cancel',
+			SCF: 'Start Capture Face'
 		}
 	},
 	bm: {
@@ -40,9 +43,11 @@ const meetLanguage = {
 		},
 		classHTML: {
 			new_class_name: 'Mendaftar Muka Pelajar',
-			input_name_class_name: 'Nama pelajar',
+			input_name_student_name: 'Nama',
+			input_name_student_id: 'ID Pelajar',
 			student_names: 'Sila letakkan Muka anda di hadapan kamera',
 			ICP: 'Mula Tangkap Muka', // ICP - "Inject current participants"
+			TP: 'Ambil Gambar',
 			Cancel: 'Batal',
 			Ok: 'Simpan',
 		},
@@ -55,10 +60,10 @@ const meetLanguage = {
 			save_button: 'Eksport',
 		},
 		updateHTML: {
-			name_2: 'Pilih Kelas',
-			Cancel_2: 'Batal',
-			Edit: 'Edit',
-			Delete: 'Padam'
+			name_2: 'Ambil Kehadiran',
+			Ok: 'Simpan',
+			Cancel: 'Batal',
+			SCF: 'Mula Tangkap Muka'
 		}
 	},
 	cn: {
@@ -71,9 +76,11 @@ const meetLanguage = {
 		},
 		classHTML: {
 			new_class_name: '学生人脸注册',
-			input_name_class_name: '学生名字',
+			input_name_student_name: '学生名字',
+			input_name_student_id: '学生卡号',
 			student_names: '请把你的脸放在镜头前',
 			ICP: '开始捕捉人脸', // ICP - "Inject current participants"
+			TP: '拍照',
 			Cancel: '取消',
 			Ok: '保存',
 		},
@@ -86,21 +93,23 @@ const meetLanguage = {
 			save_button: '导出',
 		},
 		updateHTML: {
-			name_2: '选择班级',
-			Cancel_2: '取消',
-			Edit: '编辑',
-			Delete: '删除'
+			name_2: '报到',
+			Ok: '保存',
+			SCF: '开始捕捉人脸',
+			Cancel: '取消'
 		}
 	}
 }
 function updateCards() {
 	chrome.storage.sync.get(['lang'], function(request) {
 		document.querySelector('.new-class-name').innerText = meetLanguage[request.lang]['classHTML']['new_class_name'];
-		document.querySelector('.input-name-class-name').innerText = meetLanguage[request.lang]['classHTML']['input_name_class_name'];
+		document.querySelector('.input-name-student-name').innerText = meetLanguage[request.lang]['classHTML']['input_name_student_name'];
+		document.querySelector('.input-name-student-id').innerText = meetLanguage[request.lang]['classHTML']['input_name_student_id'];
+		document.querySelector('.input-name-student-name').innerText = meetLanguage[request.lang]['classHTML']['input_name_student_name'];
 		document.querySelector('.student-names').innerText = meetLanguage[request.lang]['classHTML']['student_names'];
 		document.querySelector('#ICP').innerText = meetLanguage[request.lang]['classHTML']['ICP'];
+		document.querySelector('#TP').innerText = meetLanguage[request.lang]['classHTML']['TP'];
 		document.querySelector('#Ok').innerText = meetLanguage[request.lang]['classHTML']['Ok'];
-
 
 		document.querySelectorAll('.Cancel').forEach((element)=>{
 			element.innerText = meetLanguage[request.lang]['classHTML']['Cancel'];
@@ -110,7 +119,10 @@ function updateCards() {
 			element.innerText = meetLanguage[request.lang]['updateHTML']['name_2'];
 		});
 
-		document.querySelector('#Edit').innerText = meetLanguage[request.lang]['updateHTML']['Edit'];
-	    document.querySelector('#Delete').innerText = meetLanguage[request.lang]['updateHTML']['Delete'];
+		document.querySelector('#SCF').innerText = meetLanguage[request.lang]['updateHTML']['SCF'];
+		document.querySelector('#Ok-track').innerText = meetLanguage[request.lang]['updateHTML']['Ok'];
+		document.querySelectorAll('.Cancel').forEach((element)=>{
+			element.innerText = meetLanguage[request.lang]['updateHTML']['Cancel'];
+		});
 	});
 }

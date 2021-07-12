@@ -1,38 +1,44 @@
 function clearCards() {
 	clearTags();
-	document.querySelector('.class-name').value = "";
+	document.querySelector('.student-name').value = "";
+	document.querySelector('.student-id').value = "";
 	//document.querySelector('#tag-input').value = "";
 	tags = [];
 }
 function createNewClass() {
-	let className = document.querySelector('.class-name').value;
-	let students = [];
-	for (let i=0; i<tags.length; i++) {
-		students.push({
-			'name': tags[i],
-			'marked': false,
-			'overwrite': false
-		});
-	}
+	// let className = document.querySelector('.student-name').value;
+	// let students = [];
+	// for (let i=0; i<tags.length; i++) {
+	// 	students.push({
+	// 		'name': tags[i],
+	// 		'marked': false,
+	// 		'overwrite': false
+	// 	});
+	// }
 
 	clearCards();
 	document.getElementById('card1').style.visibility = 'hidden';
 
-	let cls = {
-		'name': className,
-		'students': students,
-		'id': Date.now()
-	};
+	// let cls = {
+	// 	'name': className,
+	// 	'students': students,
+	// 	'id': Date.now()
+	// };
 
-	chrome.storage.sync.get(['classes'], function (result) {
-		classes = result.classes;
-		classes.push(cls);
-		if (fromEdit != -1) {
-			classes.splice(getIndexOfClassById(fromEdit, classes), 1);
-			fromEdit = -1;
-		}
-		chrome.storage.sync.set({'classes': classes}, null);
-	});
+	// chrome.storage.sync.get(['classes'], function (result) {
+	// 	classes = result.classes;
+	// 	classes.push(cls);
+	// 	if (fromEdit != -1) {
+	// 		classes.splice(getIndexOfClassById(fromEdit, classes), 1);
+	// 		fromEdit = -1;
+	// 	}
+	// 	chrome.storage.sync.set({'classes': classes}, null);
+	// });
+	
+	stopWebCamera();
+	clearVideo();
+	storeFaceCaptured();
+	segment = false;
 }
 function getParent(count, element) {
 	if (count == 0) return element;
@@ -41,13 +47,15 @@ function getParent(count, element) {
 
 function cancelCard() {
 
-	stopWebCamera();
 	clearVideo();
 	clearCards();
+	stopWebCamera();
+	facesCapture = [];
+	studentList = [];
+	labels = [];
 	let card = getParent(3, this);
 	card.style.visibility = 'hidden';
 }
-
 
 function getIndexOfClassById(id, classes) {
     for (let i=0; i<classes.length; i++)
@@ -130,6 +138,7 @@ function editChoice() {
 	editClass(select.options[select.selectedIndex].value);
 	document.getElementById('card2').style.visibility = 'hidden';
 }
+
 function deleteChoice() {
 	let select = document.querySelector('#card3>.show-block-2>.choose-2')
 	deleteClass(select.options[select.selectedIndex].value);
@@ -140,6 +149,7 @@ function deleteChoice() {
 function addClass() {
     document.getElementById('card1').style.visibility = 'visible';
 }
+
 function deleteClass(id) {
     chrome.storage.sync.get(['classes'], function (request) {
         let classes = request.classes;
@@ -148,7 +158,9 @@ function deleteClass(id) {
         chrome.storage.sync.set({'classes': classes}, null);
     });
 }
+
 function editClass(id) {
+	
 	document.getElementById('card1').style.visibility = 'visible';
 	updateCards();
     chrome.storage.sync.get(['classes'], function (request) {
@@ -160,9 +172,10 @@ function editClass(id) {
             tags.push(student.name);
         });
         addTags();
-        document.querySelector('.class-name').value = classes[i].name;
+        document.querySelector('.student-name').value = classes[i].name;
     });
 }
+
 function updateChoiceBox(elemName) {
 	let select = document.querySelector(`#${elemName}>.show-block-2>.choose-2`);
 	select.innerText = null;
@@ -183,50 +196,6 @@ function updateChoiceBox(elemName) {
 	fixasync(function(ye) {
 		if (ye) {select.selectedIndex = 0;}
 	});
-}
-
-function injectCurrentParticipants() {
-
-	var canvas = document.getElementById('canvas'),
-		context = canvas.getContext('2d'),
-		video = document.getElementById('video'),
-		vendorUrl = window.URL || window.webkitURL;
-
-	navigator.getUserMedia(
-		{ video: {} },
-		stream => video.srcObject = stream,
-		err => console.error(err)
-	)
-
-	Promise.all([
-		faceapi.nets.tinyFaceDetector.loadFromUri(chrome.runtime.getURL('models/')),
-		faceapi.nets.faceLandmark68Net.loadFromUri(chrome.runtime.getURL('models/')),
-		faceapi.nets.faceRecognitionNet.loadFromUri(chrome.runtime.getURL('models/')),
-		faceapi.nets.faceExpressionNet.loadFromUri(chrome.runtime.getURL('models/'))
-	])
-
-	video.addEventListener('play', function() {
-		draw(this, context, 640, 480);
-	}, false);
-
-	async function draw(video, context, width, height) {
-		
-		context.drawImage(video, 0, 0, width, height); 
-		const displaySize = { width: width, height: height }
-        faceapi.matchDimensions(context, displaySize)
-
-		const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
-
-		if(detections.length > 0){
-			const resizedDetections = faceapi.resizeResults(detections, displaySize)
-			faceapi.draw.drawDetections(context, resizedDetections)
-			faceapi.draw.drawFaceLandmarks(context, resizedDetections)
-			faceapi.draw.drawFaceExpressions(context, resizedDetections)
-		}
-		setTimeout(draw, 10, video, context, width, height);
-	}
-
-	
 }
 
 function getCurrentDateFormat() {
@@ -267,32 +236,13 @@ function exportAttendance() {
     document.body.removeChild(element);
 }
 
-function stopWebCamera(){
-
-	video = document.getElementById('video'),
-	vendorUrl = window.URL || 
-	window.webkitURL;
-
-	const stream = video.srcObject;
-
-	if(stream != null){
-		const tracks = stream.getTracks();
-		
-		if(tracks != null){
-			tracks.forEach(function(track) {
-				track.stop();
-			});
-		}
-	}
-	
-
-
-
-	video.srcObject = null
-}
-
-function clearVideo(){
-	var canvas = document.getElementById('canvas')
-	const ctx = canvas.getContext('2d');
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+function definePressedProperty(element) {
+	Object.defineProperty(element, 'pressed', {
+		get: function () {
+			return this.getAttribute('aria-pressed') === 'true'
+		},
+		set: function (value) {
+			this.setAttribute('aria-pressed', value)
+		},
+	})
 }

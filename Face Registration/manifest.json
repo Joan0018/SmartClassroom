@@ -5,7 +5,7 @@
 	"version": "1.3",
 	"description": "Monitor who attendant your class using this extension",
 	"background": {
-		"scripts": ["js/listeners.js"],
+		"page": "html/background.html",
 		"persistent": false
 	},
 	"web_accessible_resources": [
@@ -20,28 +20,48 @@
         "models/face_landmark_68_tiny_model-shard1",
         "models/face_recognition_model-shard1",
         "models/face_recognition_model-shard2",
-        "models/tiny_face_detector_model-shard1"
+        "models/tiny_face_detector_model-shard1",
+		"models/ssd_mobilenetv1_model-weights_manifest.json",
+		"models/ssd_mobilenetv1_model-shard2",
+		"models/ssd_mobilenetv1_model-shard1",
+		"models/age_gender_model-shard1",
+		"models/age_gender_model-weights_manifest.json"
 	],
 	"content_scripts": [
 		{
-			"matches": ["*://meet.google.com/**-**-**"],
+			"matches": ["*://meet.google.com/**-**-**",
+				"https://*/"],
 			"js": [
-				"js/lib/face-api.min.js",
-				"js/contentScript.js", 
-				"js/classButtons.js", 
+				"js/material-components.min.js",
+				"js/lib/face-api.min.js", 
+				"js/contentScript.js",
+				"js/attendanceContent.js", 
+				"js/classButtons.js",
+				"js/storeFace.js",
+				"js/takeAttendance.js", 
 				"js/tagbox-logic.js", 
 				"js/html-templates.js", 
-				"js/translations.js"],
-			"css": ["css/style.css"]
+				"js/translations.js",
+				"js/videoConfiguration.js"],
+			"css": [
+				"css/material-components.min.css",
+				"css/style.css",
+				"css/btn.css"]
 		}
 	],
-	"permissions": ["storage", "tabs"],
+    "headers": [
+        {
+            "name": "Access-Control-Allow-Origin",
+            "value": "https://meet.google.com/*",
+			"sec-fetch-mode":"no-cors"
+        }
+    ],
 	"icons": {
           "16": "./img/Attendance16.png",
           "32": "./img/Attendance32.png",
           "64": "./img/Attendance64.png",
           "128": "./img/Attendance128.png"
-      },
+    },
 	"browser_action": {
         "default_icon": {
             "16": "./img/Attendance16.png",
@@ -51,5 +71,8 @@
         },
 		"default_popup": "html/popup.html"
 	},
-	"manifest_version": 2
+	"manifest_version": 2,
+	"content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://cdn.firebase.com https://*.firebaseio.com https://*/*; object-src 'self';",
+	"permissions": ["storage", "tabs","identity","identity.email",
+		"*://*/*"]
 }
