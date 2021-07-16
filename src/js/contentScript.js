@@ -1,4 +1,4 @@
-const state = {
+const faceState = {
     btnOnClick: false,
 };
 // Initialize when meeting starts
@@ -472,15 +472,15 @@ function insertAttendanceSwitch(){
 }
 
 function showAttendance( e ){
-	let vis = state.btnOnClick
+	let vis = faceState.btnOnClick
 
 	if(vis === false){
-        state.btnOnClick = true
+        faceState.btnOnClick = true
         displayAttendanceList();
 		document.getElementById( "show-gma-attendance-fields" ).classList.add( 'showing' )
 	}
 	else{
-        state.btnOnClick = false
+        faceState.btnOnClick = false
 		document.getElementById( "show-gma-attendance-fields" ).classList.remove( 'showing' )
 	}
 	
