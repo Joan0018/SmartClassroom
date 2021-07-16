@@ -31,12 +31,12 @@ function facialAttendance(){
     )
 
     Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.faceLandmark68Net.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.faceRecognitionNet.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.faceExpressionNet.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.ssdMobilenetv1.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.ageGenderNet.loadFromUri(chrome.runtime.getURL('models/')),
+        faceapi.nets.tinyFaceDetector.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.faceLandmark68Net.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.faceRecognitionNet.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.faceExpressionNet.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.ssdMobilenetv1.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.ageGenderNet.loadFromUri(chrome.runtime.getURL('src/models/')),
     ])
 
     video.addEventListener('play', function() {
@@ -91,12 +91,12 @@ function saveAttendance(){
 function loadLabeledImages() {
 
     Promise.all([
-        faceapi.nets.tinyFaceDetector.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.faceLandmark68Net.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.faceRecognitionNet.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.faceExpressionNet.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.ssdMobilenetv1.loadFromUri(chrome.runtime.getURL('models/')),
-        faceapi.nets.ageGenderNet.loadFromUri(chrome.runtime.getURL('models/')),
+        faceapi.nets.tinyFaceDetector.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.faceLandmark68Net.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.faceRecognitionNet.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.faceExpressionNet.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.ssdMobilenetv1.loadFromUri(chrome.runtime.getURL('src/models/')),
+        faceapi.nets.ageGenderNet.loadFromUri(chrome.runtime.getURL('src/models/')),
     ])
 
 

@@ -5,7 +5,7 @@ const state = {
 const readyObserver = new MutationObserver(function (mutations, me) {
     if (document.getElementsByClassName('c8mVDd')[0]) {
         let s = document.createElement('script')
-        s.src = chrome.runtime.getURL('js/inject.js')
+        s.src = chrome.runtime.getURL('src/js/inject.js')
         document.documentElement.appendChild(s)
         initialize();
         me.disconnect();
