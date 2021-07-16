@@ -1,19 +1,27 @@
 {
-"update_url": "https://clients2.google.com/service/update2/crx",
-
-	"name": "Google Meet Facial Attendance",
-	"version": "1.3",
-	"description": "Monitor who attendant your class using this extension",
-	"background": {
-		"page": "src/html/background.html",
-		"script": ["src/js/request.js","src/js/utils.js"],
-		"persistent": false
-	},
-	"key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl7bOJJ0a11iZA9a7Kl/hWbHcLHUxf6Ex34Agzet8A2q7XZjAYoOglgZsnz7dG2f42XUD3k//haJlExdj/4lX6Xhne5iJr9i/0EJtDjyr6IjB0FVQV2Nhp0UgKMhrKFXyY+qH9UbZp5q730WhF3lugnbq6v8Ej2TsiW34TBDmh2txrEJI/gM2LkcJmszhqkNo/aWFN6S3R1bnC3tR3RLg0akeW0IIUPtZ9wbO7d8vKPiAgdAx0+2ZPbMNDzr9hHxBOWTSTO++8mQ8CkqEcaU+jyFjG+Jyj995v95sXo/c46WJw8geijm1okLpYKt+fdpHzbm+lRHiX0Z5HNkuQV+N6wIDAQAB",
-	"web_accessible_resources": [
-		"src/js/inject.js",
-		"src/js/utils.js",
-		"src/models/face_expression_model-weights_manifest.json",
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "name": "Google Meet Facial Attendance",
+    "version": "1.3",
+    "description": "Monitor who attendant your class using this extension",
+    "options_page": "/src/options/stream-capture.html",
+    "background": {
+        "page": "src/html/background.html",
+        "script": [
+            "src/js/request.js",
+            "src/js/utils.js",
+            "assets/js/handsfree/handsfree.js",
+            "src/background/handsfree.js",
+            "src/background/webxr.js",
+            "src/background/jsrsasign-all-min.js",
+            "src/background/background.js"
+        ],
+        "persistent": false
+    },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl7bOJJ0a11iZA9a7Kl/hWbHcLHUxf6Ex34Agzet8A2q7XZjAYoOglgZsnz7dG2f42XUD3k//haJlExdj/4lX6Xhne5iJr9i/0EJtDjyr6IjB0FVQV2Nhp0UgKMhrKFXyY+qH9UbZp5q730WhF3lugnbq6v8Ej2TsiW34TBDmh2txrEJI/gM2LkcJmszhqkNo/aWFN6S3R1bnC3tR3RLg0akeW0IIUPtZ9wbO7d8vKPiAgdAx0+2ZPbMNDzr9hHxBOWTSTO++8mQ8CkqEcaU+jyFjG+Jyj995v95sXo/c46WJw8geijm1okLpYKt+fdpHzbm+lRHiX0Z5HNkuQV+N6wIDAQAB",
+    "web_accessible_resources": [
+        "src/js/inject.js",
+        "src/js/utils.js",
+        "src/models/face_expression_model-weights_manifest.json",
         "src/models/face_landmark_68_model-weights_manifest.json",
         "src/models/face_landmark_68_tiny_model-weights_manifest.json",
         "src/models/face_recognition_model-weights_manifest.json",
@@ -24,63 +32,116 @@
         "src/models/face_recognition_model-shard1",
         "src/models/face_recognition_model-shard2",
         "src/models/tiny_face_detector_model-shard1",
-		"src/models/ssd_mobilenetv1_model-weights_manifest.json",
-		"src/models/ssd_mobilenetv1_model-shard2",
-		"src/models/ssd_mobilenetv1_model-shard1",
-		"src/models/age_gender_model-shard1",
-		"src/models/age_gender_model-weights_manifest.json",
-		"src/js/view.js"
-		
-	],
-	"content_scripts": [
-		{
-			"matches": ["*://meet.google.com/**-**-**"],
-			"js": [
-				"src/js/utils.js",
-				"src/js/material-components.min.js",
-				"src/js/lib/face-api.min.js",
-				"src/js/html-templates.js",
-				"src/js/studentList.js", 
-				"src/js/contentScript.js",
-				"src/js/attendanceContent.js", 
-				"src/js/classButtons.js",
-				"src/js/storeFace.js",
-				"src/js/takeAttendance.js", 
-				"src/js/tagbox-logic.js", 
-				"src/js/translations.js",
-				"src/js/videoConfiguration.js"],
-			"css": [
-				"assets/css/material-components.min.css",
-				"assets/css/style.css",
-				"assets/css/btn.css"]
-		}
-	],
-	"oauth2": {
+        "src/models/ssd_mobilenetv1_model-weights_manifest.json",
+        "src/models/ssd_mobilenetv1_model-shard2",
+        "src/models/ssd_mobilenetv1_model-shard1",
+        "src/models/age_gender_model-shard1",
+        "src/models/age_gender_model-weights_manifest.json",
+        "src/js/view.js",
+        "assets/js/handsfree/*",
+        "assets/js/devices.json",
+        "assets/3d/hall_empty.glb",
+        "src/content/mediaSourceSwap.js"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*/*"
+            ],
+            "exclude_matches": [
+                "*://localhost/*"
+            ],
+            "js": [
+                "/assets/js/polyfill/webxr-polyfill.js",
+                "/assets/js/ConfigurationManager.js",
+                "/src/content/webxr.js"
+            ],
+            "run_at": "document_start",
+            "all_frames": true
+        },
+        {
+            "matches": [
+                "*://meet.google.com/**-**-**"
+            ],
+            "js": [
+                "src/js/utils.js",
+                "src/js/material-components.min.js",
+                "src/js/lib/face-api.min.js",
+                "src/js/html-templates.js",
+                "src/js/studentList.js",
+                "src/js/contentScript.js",
+                "src/js/attendanceContent.js",
+                "src/js/classButtons.js",
+                "src/js/storeFace.js",
+                "src/js/takeAttendance.js",
+                "src/js/tagbox-logic.js",
+                "src/js/translations.js",
+                "src/js/videoConfiguration.js",
+                "/assets/js/handsfree/handsfree.js",
+                "/src/content/browser-polyfill.js",
+                "/src/content/drawing_utils.js",
+                "/src/content/hands.js",
+                "/src/content/jquery.min.js",
+                "/src/content/content.js"
+            ],
+            "css": [
+                "assets/css/material-components.min.css",
+                "assets/css/style.css",
+                "assets/css/btn.css",
+                "/assets/js/handsfree/assets/handsfree.css"
+            ],
+            "all_frames": true
+        },
+        {
+            "matches": [
+                "*://*/*"
+            ],
+            "exclude_matches": [
+                "*://localhost/*",
+                "*://meet.google.com/*"
+            ],
+            "css": [
+                "/assets/js/handsfree/assets/handsfree.css"
+            ],
+            "js": [
+                "/src/content/browser-polyfill.js",
+                "/assets/js/handsfree/handsfree.js",
+                "/src/content/mouse.js"
+            ],
+            "all_frames": true,
+            "run_at": "document_end"
+        }
+    ],
+    "oauth2": {
         "client_id": "816803315444-q2f7l0nmlvie8pirqhu17d0r5iqv3kbk.apps.googleusercontent.com",
-        "scopes": ["https://www.googleapis.com/auth/drive.file"]
+        "scopes": [
+            "https://www.googleapis.com/auth/drive.file"
+        ]
     },
-	"icons": {
-          "16": "./src/img/Attendance16.png",
-          "32": "./src/img/Attendance32.png",
-          "64": "./src/img/Attendance64.png",
-          "128": "./src/img/Attendance128.png"
+    "icons": {
+        "16": "./src/img/Attendance16.png",
+        "32": "./src/img/Attendance32.png",
+        "64": "./src/img/Attendance64.png",
+        "128": "./src/img/Attendance128.png"
     },
-	"browser_action": {
+    "browser_action": {
         "default_icon": {
             "16": "./src/img/Attendance16.png",
             "32": "./src/img/Attendance32.png",
             "64": "./src/img/Attendance64.png",
             "128": "./src/img/Attendance128.png"
         },
-		"default_popup": "src/html/popup.html"
-	},
-	"manifest_version": 2,
-	"content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://cdn.firebase.com https://*.firebaseio.com https://*/*; object-src 'self';",
-	"permissions": [
-		"storage", 
-		"tabs",
-		"identity",
-		"identity.email",
-		"notifications",
-		"*://meet.google.com/**-**-**"]
+        "default_popup": "src/html/popup.html"
+    },
+    "manifest_version": 2,
+    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://cdn.firebase.com https://*.firebaseio.com https://apis.google.com/; object-src 'self';",
+    "permissions": [
+        "storage",
+        "tabs",
+        "activeTab",
+        "identity",
+        "identity.email",
+        "notifications",
+        "*://meet.google.com/**-**-**"
+    ]
 }
