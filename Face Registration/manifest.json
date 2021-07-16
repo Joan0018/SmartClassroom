@@ -6,10 +6,13 @@
 	"description": "Monitor who attendant your class using this extension",
 	"background": {
 		"page": "html/background.html",
+		"script": ["js/request.js","js/utils.js"],
 		"persistent": false
 	},
+	"key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl7bOJJ0a11iZA9a7Kl/hWbHcLHUxf6Ex34Agzet8A2q7XZjAYoOglgZsnz7dG2f42XUD3k//haJlExdj/4lX6Xhne5iJr9i/0EJtDjyr6IjB0FVQV2Nhp0UgKMhrKFXyY+qH9UbZp5q730WhF3lugnbq6v8Ej2TsiW34TBDmh2txrEJI/gM2LkcJmszhqkNo/aWFN6S3R1bnC3tR3RLg0akeW0IIUPtZ9wbO7d8vKPiAgdAx0+2ZPbMNDzr9hHxBOWTSTO++8mQ8CkqEcaU+jyFjG+Jyj995v95sXo/c46WJw8geijm1okLpYKt+fdpHzbm+lRHiX0Z5HNkuQV+N6wIDAQAB",
 	"web_accessible_resources": [
 		"js/inject.js",
+		"js/utils.js",
 		"models/face_expression_model-weights_manifest.json",
         "models/face_landmark_68_model-weights_manifest.json",
         "models/face_landmark_68_tiny_model-weights_manifest.json",
@@ -25,22 +28,25 @@
 		"models/ssd_mobilenetv1_model-shard2",
 		"models/ssd_mobilenetv1_model-shard1",
 		"models/age_gender_model-shard1",
-		"models/age_gender_model-weights_manifest.json"
+		"models/age_gender_model-weights_manifest.json",
+		"js/view.js"
+		
 	],
 	"content_scripts": [
 		{
-			"matches": ["*://meet.google.com/**-**-**",
-				"https://*/"],
+			"matches": ["*://meet.google.com/**-**-**"],
 			"js": [
+				"js/utils.js",
 				"js/material-components.min.js",
-				"js/lib/face-api.min.js", 
+				"js/lib/face-api.min.js",
+				"js/html-templates.js",
+				"js/studentList.js", 
 				"js/contentScript.js",
 				"js/attendanceContent.js", 
 				"js/classButtons.js",
 				"js/storeFace.js",
 				"js/takeAttendance.js", 
 				"js/tagbox-logic.js", 
-				"js/html-templates.js", 
 				"js/translations.js",
 				"js/videoConfiguration.js"],
 			"css": [
@@ -49,13 +55,10 @@
 				"css/btn.css"]
 		}
 	],
-    "headers": [
-        {
-            "name": "Access-Control-Allow-Origin",
-            "value": "https://meet.google.com/*",
-			"sec-fetch-mode":"no-cors"
-        }
-    ],
+	"oauth2": {
+        "client_id": "816803315444-q2f7l0nmlvie8pirqhu17d0r5iqv3kbk.apps.googleusercontent.com",
+        "scopes": ["https://www.googleapis.com/auth/drive.file"]
+    },
 	"icons": {
           "16": "./img/Attendance16.png",
           "32": "./img/Attendance32.png",
@@ -73,6 +76,11 @@
 	},
 	"manifest_version": 2,
 	"content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com https://cdn.firebase.com https://*.firebaseio.com https://*/*; object-src 'self';",
-	"permissions": ["storage", "tabs","identity","identity.email",
-		"*://*/*"]
+	"permissions": [
+		"storage", 
+		"tabs",
+		"identity",
+		"identity.email",
+		"notifications",
+		"*://meet.google.com/**-**-**"]
 }

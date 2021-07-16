@@ -1,6 +1,6 @@
 // Your web app's Firebase configuration
 console.log("Please Wait...Firebase Loading")
-
+const startTime = ~~(Date.now() / 1000)
 var firebaseConfig = {
     apiKey: "AIzaSyCFe9RV9CHaR-yqzCwe65K8K8iQKxozLNY",
     authDomain: "smartclassroomjs.firebaseapp.com",
@@ -27,6 +27,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		    });
 		    return true;
     	}
+        case "open-url": {
+            chrome.tabs.create({ url: request.url })
+        }
     }
 });
 
@@ -119,7 +122,101 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             dbAttd.set({
                 Name: studName,
                 ID: studID,
+                Time: new Date().toLocaleTimeString()
             });
+        }
+        case "RetrieveStudentAttend":{
+            chrome.identity.getAuthToken({ interactive: true }, (token) => {
+                var attedList = [];
+                firebase.database().ref('AttendedStudent/' + request.data).on('value', (snapshot) => {
+                    console.log(snapshot.val());
+                    snapshot.forEach(function(childSnapshot) {
+                        attedList.push({
+                            'id': childSnapshot.val().ID,
+                            'name': childSnapshot.val().Name,
+                            'time': childSnapshot.val().Time
+                        })
+                    });
+
+                  }, (errorObject) => {
+                    console.log('The read failed: ' + errorObject.name);
+                }); 
+                createSpreadsheet(token, request.data,attedList)
+            })
         }
     }
 });
+
+//Read Token
+function authenticate() {
+    return new Promise((resolve, reject) => {
+        chrome.identity.getAuthToken({ interactive: true }, (token) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError)
+            } else {
+                resolve(token)
+            }
+        })
+    })
+}
+
+function refreshToken(token, callback) {
+    chrome.identity.removeCachedAuthToken({ token: token }, () => {
+        Utils.log('Removed cached auth token.')
+        chrome.identity.getAuthToken({ interactive: true }, callback)
+    })
+}
+// const notifierMap = new Map()
+
+async function createSpreadsheet(token, code, attend) {
+    const body = {
+        properties: {
+            title: 'Google Meet Facial Attendance',
+            spreadsheetTheme: getSpreadsheetTheme(),
+        },
+    }
+    const init = {
+        method: 'POST',
+        async: true,
+        headers: {
+            Authorization: 'Bearer ' + token,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    }
+    let spreadsheetId = null
+    let requests = []
+    console.log("Creating new attendance spreadsheet...")
+    // const notifierKey = `${className}-${code}`
+    // if (!notifierMap.has(notifierKey)) {
+    //     notifierMap.set(notifierKey, new Notifier(className, code))
+    // }
+    // const notifier = notifierMap.get(notifierKey)
+    // notifier.post(port, { progress: 0 })
+    const newSpreadsheet = await (
+        await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
+    ).json()
+    if (newSpreadsheet.spreadsheetId == undefined) {
+        throw newSpreadsheet.error
+    }
+    console.log(
+        `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
+    )
+    chrome.storage.local.set({
+        'spreadsheet-id': newSpreadsheet.spreadsheetId,
+    })
+    spreadsheetId = newSpreadsheet.spreadsheetId
+    //requests = requests.concat(updateSheetProperties(className, code, 0, '*'))
+    requests = requests.concat(createHeaders(0))
+    const icReqs = await initializeCells(code, 0,attend)
+    //notifier.post(port, { progress: 0.6 })
+    requests = requests.concat(icReqs)
+    Utils.log(token)
+    console.log(requests)
+    Utils.log(spreadsheetId)
+    const data = await batchUpdate(token, requests, spreadsheetId, 0)
+    //notifier.post(port, { done: true, progress: 1 })
+    //notifierMap.delete(notifierKey)
+    console.log('Initialize spreadsheet response:')
+    console.log(data)
+}

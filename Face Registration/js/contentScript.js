@@ -1,7 +1,6 @@
 const state = {
     btnOnClick: false,
 };
-
 // Initialize when meeting starts
 const readyObserver = new MutationObserver(function (mutations, me) {
     if (document.getElementsByClassName('c8mVDd')[0]) {
@@ -43,15 +42,9 @@ function initialize() {
         },
         function (response) {
             if (response.ready) {
-
-                alert("Welcome to google meet, you are using Google Meet Facial Attendance")
-                insertAttendanceSwitch();
-                // Create divs and buttons
-
-                // document
-                //     .querySelector('.r6xAKc')
-                //     .insertAdjacentHTML('afterend', buttonHTML)
                 
+                insertAttendanceSwitch();
+
                 const panelContainer = document.querySelector('.R3Gmyc.qwU8Me')
                 document
                     .querySelector('[jsname="HlFzId"]')
@@ -156,7 +149,16 @@ function initialize() {
                         }
                     }
                 })
-                
+                Utils.log("ContentScript.js")
+                const exportButton = document.getElementById('export')
+                exportButton.addEventListener('click', () => {
+                    var code = getMeetCode();
+                    chrome.runtime.sendMessage({
+                        command: 'RetrieveStudentAttend',
+                        data: code
+                    })
+                })
+                initializePanel();
                 const screen = document.getElementsByClassName('crqnQb')[0];
 
                 screen.insertAdjacentHTML('afterbegin', classHTML);
@@ -487,3 +489,17 @@ function showAttendance( e ){
 	e.stopPropagation()
 }
 
+function initializePanel() {
+    document
+        .getElementById('panel')
+        .querySelector('.help')
+        .addEventListener('click', moreInfoHelp)
+    
+}
+
+
+function getMeetCode() {
+    return document
+        .querySelector('c-wiz')
+        .getAttribute('data-unresolved-meeting-id')
+}

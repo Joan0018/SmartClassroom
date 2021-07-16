@@ -132,3 +132,10 @@ function loadLabeledImages() {
     }
 
 }
+
+function exportXML(){
+    console.log("Clicked")
+    chrome.runtime.sendMessage({
+		command: 'export'
+	})
+}

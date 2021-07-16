@@ -181,7 +181,7 @@ const panelHTML = `<div
     id="panel"
     jsname="b0t70b"
     jscontroller="dkJU2d"
-    jsaction="VOcP9c:QPhnyd;ntQuZe:EuYDs"
+    jsaction="VOcP9c:QPhnyd;ntQuZe:EuYDs"s
     >
     <div class="CYZUZd">
         <div
@@ -191,7 +191,7 @@ const panelHTML = `<div
             tabindex="-1"
             jsname="rQC7Ie"
         >
-            Attendance Management
+            Attendance
         </div>
         <div class="VUk8eb">
             <button
@@ -238,7 +238,7 @@ const panelHTML = `<div
     </div>
     <div class="hWX4r">
         <div class="view class-view">
-            <h4 class="subtitle">Classes</h4>
+            <h4 class="subtitle">Student</h4>
             <ul class="mdc-list class-list">
                 <template id="class-item-template">
                     <li
@@ -298,7 +298,7 @@ const panelHTML = `<div
             <div class="no-classes notification" style="display: none">
                 <i class="material-icons"> warning </i>
                 <p>
-                    You don't have any classes! Add a class by clicking the
+                    You don't have any students! Add a student by clicking the
                     button below.
                 </p>
             </div>
@@ -309,355 +309,8 @@ const panelHTML = `<div
                     aria-hidden="true"
                     >add</i
                 >
-                <span class="mdc-button__label">Add Class</span>
+                <span class="mdc-button__label">Add Student</span>
             </button>
-        </div>
-        <div class="view student-view" hidden>
-            <div style="position: relative;">
-                <button class="mdc-button back subtitle-button">
-                    <span class="mdc-button__ripple"></span>
-                    <i class="material-icons mdc-button__icon petite-icon" aria-hidden="true">arrow_back</i>
-                    <span class="mdc-button__label subtitle">Back</span>
-                </button>
-                <h2 class="class-header">
-                    Viewing Class
-                </h2>
-                <button class="mdc-button subtitle-button more" style="float: right;">
-                    <span class="mdc-button__ripple"></span>
-                    <i class="material-icons mdc-button__icon petite-icon" aria-hidden="true">sort</i>
-                    <span class="mdc-button__label subtitle">Sort</span>
-                </button>
-                <div class="mdc-menu-surface--anchor sort-anchor">
-                    <div
-                        class="mdc-menu mdc-menu-surface"
-                        id="sort-menu"
-                        role="menu"
-                    >
-                        <ul class="mdc-list mdc-list--dense">
-                            <li
-                                class="mdc-list-item mdc-ripple-surface"
-                                id="last-name"
-                                role="menuitem"
-                                tabindex="0"
-                            >
-                                <span class="mdc-list-item__text"
-                                    >Sort by Last Name (A–Z)</span
-                                >
-                            </li>
-                            <li
-                                class="mdc-list-item mdc-ripple-surface"
-                                id="first-name"
-                                role="menuitem"
-                                tabindex="0"
-                            >
-                                <span class="mdc-list-item__text"
-                                    >Sort by First Name (A–Z)</span
-                                >
-                            </li>
-                            <li
-                                class="mdc-list-item mdc-ripple-surface"
-                                id="present-first"
-                                role="menuitem"
-                                tabindex="0"
-                            >
-                                <span class="mdc-list-item__text"
-                                    >Sort by Presence (Present First)</span
-                                >
-                            </li>
-                            <li
-                                class="mdc-list-item mdc-ripple-surface"
-                                id="absent-first"
-                                role="menuitem"
-                                tabindex="0"
-                            >
-                                <span class="mdc-list-item__text"
-                                    >Sort by Presence (Absent First)</span
-                                >
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="mdc-list-divider" role="separator"></div>
-            <div style="text-align: center">
-                <button class="mdc-button edit-roster">
-                    <div class="mdc-button__ripple"></div>
-                    <i
-                        class="material-icons mdc-button__icon"
-                        aria-hidden="true"
-                        >edit</i
-                    >
-                    <span class="mdc-button__label">Edit Class</span>
-                </button>
-            </div>
-            <div class="mdc-list-divider" role="separator"></div>
-            <div id="status-container">
-                <div
-                    id="status-bar"
-                    jscontroller="VXdfxd"
-                    jsaction="mouseenter:tfO1Yc; mouseleave:JywGue;"
-                    data-tooltip="Show Status Details"
-                    data-tooltip-vertical-offset="-12"
-                    data-tooltip-horizontal-offset="0"
-                    aria-label="Show Status Details"
-                    aria-pressed="false"
-                    aria-expanded="false"
-                    role="button"
-                    tabindex="0"
-                >
-                    <span
-                        id="status-green"
-                        style="width: 100%"
-                        aria-label="Present: 0/0"
-                    ></span>
-                    <span
-                        id="status-yellow"
-                        style="width: 0%"
-                        aria-label="Previously Present: 0/0"
-                    ></span>
-                    <span
-                        id="status-red"
-                        style="width: 0%"
-                        aria-label="Absent: 0/0"
-                    ></span>
-                </div>
-                <div id="status-details" class="collapsed">
-                    <div id="status-presence">
-                        <div>
-                            <div class="status-details-container green">
-                                <span class="material-icons">lens</span>
-                                <span class="status-details-count"
-                                    ><b>0</b>/0</span
-                                >
-                            </div>
-                            <div class="status-details-text">present</div>
-                        </div>
-                        <div>
-                            <div class="status-details-container yellow">
-                                <span class="material-icons">lens</span>
-                                <span class="status-details-count"
-                                    ><b>0</b>/0</span
-                                >
-                            </div>
-                            <div class="status-details-text">
-                                previously present
-                            </div>
-                        </div>
-                        <div>
-                            <div class="status-details-container red">
-                                <span class="material-icons">lens</span>
-                                <span class="status-details-count"
-                                    ><b>0</b>/0</span
-                                >
-                            </div>
-                            <div class="status-details-text">absent</div>
-                        </div>
-                    </div>
-                    <div
-                        id="status-unlisted"
-                        class="mdc-ripple-surface"
-                        jscontroller="VXdfxd"
-                        jsaction="mouseenter:tfO1Yc; mouseleave:JywGue;"
-                        data-tooltip="Jump to Unlisted"
-                        data-tooltip-vertical-offset="-12"
-                        data-tooltip-horizontal-offset="0"
-                        aria-label="Jump to Unlisted"
-                        aria-disabled="true"
-                        role="button"
-                        tabindex="0"
-                    >
-                        <div class="status-details-container gray">
-                            <span class="material-icons">lens</span>
-                            <span class="status-details-count"><b>0</b></span>
-                        </div>
-                        <div class="status-details-text">Not on List</div>
-                    </div>
-                    <button id="hide-status-details" class="mdc-button">
-                        <span class="mdc-button__ripple"></span>
-                        <span class="mdc-button__label">Hide</span>
-                    </button>
-                </div>
-            </div>
-            <div class="mdc-list-divider" role="separator"></div>
-            <div class="student-content">
-                <div class="no-students notification" style="display: none">
-                    <i class="material-icons"> warning </i>
-                    <p>
-                        Select edit or click the + button next to a name to add
-                        students to this class.
-                    </p>
-                </div>
-                <ul
-                    class="mdc-list mdc-list--dense mdc-list--two-line"
-                    id="roster-status"
-                >
-                    <template id="unlisted-template">
-                        <li class="mdc-list-divider" role="separator"></li>
-                        <li id="unlisted-divider">
-                            Not on List
-                            <button id="add-all-unlisted" class="mdc-button">
-                                <span class="mdc-button__ripple"></span>
-                                <span class="mdc-button__label">Add All</span>
-                            </button>
-                        </li>
-                    </template>
-                    <template id="student-template">
-                        <li class="mdc-list-divider" role="separator"></li>
-                        <li class="mdc-list-item" tabindex="0">
-                            <span
-                                class="mdc-list-item__graphic material-icons"
-                                jscontroller="VXdfxd"
-                                jsaction="mouseenter:tfO1Yc; mouseleave:JywGue;"
-                                tabindex="0"
-                                aria-label="Not on List"
-                                data-tooltip="Not on List"
-                                data-tooltip-vertical-offset="-12"
-                                data-tooltip-horizontal-offset="0"
-                            >
-                                error
-                            </span>
-                            <span class="mdc-list-item__text">
-                                <span class="mdc-list-item__primary-text">
-                                    First Last
-                                </span>
-                                <span class="mdc-list-item__secondary-text">
-                                    Joined at 12:00 AM
-                                </span>
-                            </span>
-                            <div class="mdc-list-item__meta">
-                                <button
-                                    class="
-                                        mdc-icon-button
-                                        material-icons
-                                        medium-button
-                                    "
-                                    aria-label="Add to Class"
-                                    jscontroller="VXdfxd"
-                                    jsaction="mouseenter:tfO1Yc; mouseleave:JywGue;"
-                                    tabindex="0"
-                                    data-tooltip="Add to Class"
-                                    data-tooltip-vertical-offset="-12"
-                                    data-tooltip-horizontal-offset="0"
-                                >
-                                    add_circle
-                                </button>
-                            </div>
-                        </li>
-                    </template>
-                </ul>
-            </div>
-        </div>
-        <div class="view edit-view" hidden>
-            <div style="position: relative;">
-                <button class="mdc-button back subtitle-button">
-                    <span class="mdc-button__ripple"></span>
-                    <i class="material-icons mdc-button__icon petite-icon" aria-hidden="true">arrow_back</i>
-                    <span class="mdc-button__label subtitle">Back</span>
-                </button>
-                <h2 class="class-header">
-                    Editing Class
-                </h2>
-            </div>
-            <div class="mdc-list-divider" role="separator"></div>
-            <div style="text-align: center">
-                <button class="mdc-button confirm-roster save-class">
-                    <div class="mdc-button__ripple"></div>
-                    <i
-                        class="material-icons mdc-button__icon"
-                        aria-hidden="true"
-                        >assignment_turned_in</i
-                    >
-                    <span class="mdc-button__label">Save</span>
-                </button>
-            </div>
-            <div class="mdc-list-divider" role="separator"></div>
-            <div class="edit-content">
-                <div class="label zy3vwb">
-                    Class Name
-                </div>
-                <label
-                    class="
-                        class-name-field
-                        mdc-text-field mdc-text-field--outlined
-                    "
-                >
-                    <input type="text" class="mdc-text-field__input" />
-                    <span class="mdc-notched-outline">
-                        <span class="mdc-notched-outline__leading"></span>
-                        <span class="mdc-notched-outline__trailing"></span>
-                    </span>
-                </label>
-                <div class="label zy3vwb">Student Names</div>
-                <label
-                    class="
-                        mdc-text-field
-                        mdc-text-field--outlined
-                        mdc-text-field--textarea
-                        mdc-text-field--no-label
-                    "
-                >
-                    <div
-                        class="mdc-chip-set mdc-chip-set--input"
-                        role="grid"
-                    >
-                        <template id="chip-template">
-                            <div class="mdc-chip" role="row">
-                                <div class="mdc-chip__ripple"></div>
-                                <span role="gridcell">
-                                    <span
-                                        role="button"
-                                        tabindex="0"
-                                        class="mdc-chip__primary-action"
-                                    >
-                                        <span class="mdc-chip__text"
-                                            >First Last</span
-                                        >
-                                    </span>
-                                    <span role="gridcell">
-                                        <i
-                                            class="
-                                                material-icons
-                                                mdc-chip__icon
-                                                mdc-chip__icon--trailing
-                                            "
-                                            tabindex="0"
-                                            role="button"
-                                            style="margin-left: 0"
-                                            >cancel</i
-                                        >
-                                    </span>
-                                </span>
-                            </div>
-                        </template>
-                    </div>
-                    <div class="highlighter"></div>
-                    <textarea
-                        class="mdc-text-field__input"
-                        rows="6"
-                        cols="100"
-                        aria-label="Enter Student Names"
-                        aria-controls="student-helper-panel"
-                        aria-describedby="student-helper-panel"
-                    ></textarea>
-                    <span class="mdc-notched-outline">
-                        <span class="mdc-notched-outline__leading"></span>
-                        <span class="mdc-notched-outline__notch"> </span>
-                        <span class="mdc-notched-outline__trailing"></span>
-                    </span>
-                </label>
-                <div
-                    class="mdc-text-field-helper-line"
-                    style="margin-bottom: 16px"
-                >
-                    <div
-                        class="mdc-text-field-helper-text"
-                        id="student-helper-panel"
-                        aria-hidden="true"
-                    >
-                        Separate names with Enter.
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <div id="export-container">

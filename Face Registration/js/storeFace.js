@@ -185,7 +185,7 @@ async function extractFaceFromBox(inputImage, box){
 	}   
 } 
 
-//Store the face by passing the array through sending message (Process will be taken in firebase.js)
+//Store the face by passing the array through sending message (Process will be taken in background.js)
 function storeFaceCaptured(){
 
     if(facesCapture.length > 0){

@@ -246,3 +246,10 @@ function definePressedProperty(element) {
 		},
 	})
 }
+
+function moreInfoHelp() {
+	chrome.runtime.sendMessage({
+		data: 'open-url',
+		url: 'https://github.com/Joan0018/SmartClassroom/tree/main/Face%20Registration',
+	})
+}
