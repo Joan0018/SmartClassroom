@@ -8,7 +8,7 @@ const handsfree = new Handsfree({
     }
 })
 
-const state = {
+const handState = {
     video: null,
     canvas: null,
     username: null, // current username
@@ -35,9 +35,9 @@ function keydown(evt) {
 
     // Only available for number && sign (Mouse excluded)
     if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 49) { // CTRL + Shift + 1 (number)
-        if (state.handStatusDrawing === 'start') {
+        if (handState.handStatusDrawing === 'start') {
 
-            state.handGesture = "number";
+            handState.handGesture = "number";
             chrome.storage.sync.set({ "handGesture": "number" });
 
         } else {
@@ -47,9 +47,9 @@ function keydown(evt) {
         }
     }
     else if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 50) { // CTRL + Shift + 2 (sign)
-        if (state.handStatusDrawing === 'start') {
+        if (handState.handStatusDrawing === 'start') {
 
-            state.handGesture = "sign";
+            handState.handGesture = "sign";
             chrome.storage.sync.set({ "handGesture": "sign" });
 
         } else {
@@ -61,10 +61,10 @@ function keydown(evt) {
 
         if (evt.path[0].tagName === "TEXTAREA") {
             if (evt.path[0].value.trim().length === 0) {
-                state.chatbotEnable = true;
+                handState.chatbotEnable = true;
             }
         } else {
-            state.chatbotEnable = true;
+            handState.chatbotEnable = true;
         }
     }
 }
@@ -1905,14 +1905,14 @@ async function overrideGetUserMedia() {
     canvas.setAttribute("id", "sourceCanvas");
     canvas.setAttribute("style", "display:none");
     document.documentElement.appendChild(canvas);
-    state.canvas = canvas;
+    handState.canvas = canvas;
 
     // Create status box for display message
     var statusBox = document.createElement("div");
     statusBox.setAttribute("id", "statusBox");
     statusBox.setAttribute("style", "width: 175px; height: 25px; color: white; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
     document.body.appendChild(statusBox);
-    state.statusBox = statusBox;
+    handState.statusBox = statusBox;
 
     //Get user local video to replace the video in Google Meet
     injectMediaSourceSwap();
@@ -1938,16 +1938,16 @@ async function overrideGetUserMedia() {
 }
 
 function realVideoAdded(video) {
-    state.video = video;
+    handState.video = video;
 
     video.onloadedmetadata = function () {
         //Set Width and Height
-        state.video.width = state.video.videoWidth;
-        state.video.height = state.video.videoHeight;
-        state.canvas.width = state.video.width;
-        state.canvas.height = state.video.height;
+        handState.video.width = handState.video.videoWidth;
+        handState.video.height = handState.video.videoHeight;
+        handState.canvas.width = handState.video.width;
+        handState.canvas.height = handState.video.height;
 
-        state.video.play();
+        handState.video.play();
 
         // Run the module
         handInRealTime();
@@ -1956,34 +1956,36 @@ function realVideoAdded(video) {
 }
 
 async function start() {
-    await loadState();
+    await loadhandState();
     loadHandGesture();
     overrideGetUserMedia();
 }
 
-async function loadState() {
-    state.handModuleIsOn = (await browser.storage.sync.get(["handModuleIsOn"])).handModuleIsOn;
-    state.handGesture = (await browser.storage.sync.get(["handGesture"])).handGesture;
-    state.handStatusDrawing = (await browser.storage.sync.get(["handStatusDrawing"])).handStatusDrawing;
-    state.sheetCode = (await browser.storage.sync.get(["sheetCodeIsOn"])).sheetCodeIsOn;
+async function loadhandState() {
+    handState.handModuleIsOn = (await browser.storage.sync.get(["handModuleIsOn"])).handModuleIsOn;
+    handState.handGesture = (await browser.storage.sync.get(["handGesture"])).handGesture;
+    handState.handStatusDrawing = (await browser.storage.sync.get(["handStatusDrawing"])).handStatusDrawing;
+    handState.sheetCode = (await browser.storage.sync.get(["sheetCodeIsOn"])).sheetCodeIsOn;
 }
 
-// Listen to any changes on the storage and update the state
+// Listen to any changes on the storage and update the handState
 chrome.storage.onChanged.addListener(function (changes, namespace) {
     for (key in changes) {
         var storageChange = changes[key];
 
         if (key === "handModuleIsOn") {
-            state.handModuleIsOn = storageChange.newValue;
+            handState.handModuleIsOn = storageChange.newValue;
 
         } else if (key === "handGesture") {
-            state.handGesture = storageChange.newValue;
+            handState.handGesture = storageChange.newValue;
+
+            adjustHandGesture();
 
         } else if (key === "handStatusDrawing") {
-            state.handStatusDrawing = storageChange.newValue;
+            handState.handStatusDrawing = storageChange.newValue;
 
         } else if (key === "sheetCodeIsOn") {
-            state.sheetCode = storageChange.newValue;
+            handState.sheetCode = storageChange.newValue;
         }
     }
 });
@@ -1992,15 +1994,17 @@ function loadHandGesture() {
     number_gesture();
     sign_gesture();
 
+    adjustHandGesture();
+
     // Enable handsfree's mouse function
-    if (state.handGesture === 'mouse') {
+    if (handState.handGesture === 'mouse') {
         handsfree.use('pinchClick', ({ hands }) => {
             if (!hands.multiHandLandmarks) return
 
             handsfree.enablePlugins('browser');
 
             hands.pointer.forEach((pointer, hand) => {
-                if (pointer.isVisible && hands.pinchState[hand][0] === 'start') {
+                if (pointer.isVisible && hands.pinchhandState[hand][0] === 'start') {
                     const $el = document.elementFromPoint(pointer.x, pointer.y)
                     if ($el) {
                         $el.dispatchEvent(
@@ -2024,32 +2028,73 @@ function loadHandGesture() {
     }
 }
 
+// Change Gesture without refresh page
+// enable and disable gesture based on handState.handGesture
+function adjustHandGesture() {
+    
+    if (handState.handGesture === "number") {
+
+        // Number
+        for (let i = 0; i < numberGestureArr.length; i++) {
+            handsfree.gesture[numberGestureArr[i]].enable()
+        }
+
+        // Sign
+        for (let i = 0; i < signGestureArr.length; i++) {
+            handsfree.gesture[signGestureArr[i]].disable()
+        }
+
+    } else if (handState.handGesture === "sign") {
+
+        // Number
+        for (let i = 0; i < numberGestureArr.length; i++) {
+            handsfree.gesture[numberGestureArr[i]].disable()
+        }
+
+        // Sign
+        for (let i = 0; i < signGestureArr.length; i++) {
+            handsfree.gesture[signGestureArr[i]].enable()
+        }
+
+    } else { // Disable all gesture for Mosue function
+        // Number
+        for (let i = 0; i < numberGestureArr.length; i++) {
+            handsfree.gesture[numberGestureArr[i]].disable()
+        }
+
+        // Sign
+        for (let i = 0; i < signGestureArr.length; i++) {
+            handsfree.gesture[signGestureArr[i]].disable()
+        }
+    }
+}
+
 // Action when gesture detected
 function handGestureAction(gestureName) {
 
-    if (gestureName !== state.previousGesture) {
+    if (gestureName !== handState.previousGesture) {
 
-        state.previousGesture = gestureName;
+        handState.previousGesture = gestureName;
 
         switch (gestureName) {
             case "One":
-                state.chatbotText = "chosen first options!";
+                handState.chatbotText = "chosen first options!";
                 return
 
             case "Two":
-                state.chatbotText = "chosen second options!";
+                handState.chatbotText = "chosen second options!";
                 return
 
             case "Three":
-                state.chatbotText = "chosen third options!";
+                handState.chatbotText = "chosen third options!";
                 return
 
             case "Four":
-                state.chatbotText = "chosen forth options!";
+                handState.chatbotText = "chosen forth options!";
                 return
 
             case "Five":
-                state.chatbotText = "chosen fifth options!";
+                handState.chatbotText = "chosen fifth options!";
                 return
 
             case "Help":
@@ -2058,19 +2103,19 @@ function handGestureAction(gestureName) {
                     help.click();
                 }
 
-                state.chatbotText = "";
+                handState.chatbotText = "";
                 return
 
             case "Thank_You":
-                state.chatbotText = "saying Thank You!"
+                handState.chatbotText = "saying Thank You!"
                 return
 
             case "Nice,I'm_Good":
-                state.chatbotText = "currently nice and good!"
+                handState.chatbotText = "currently nice and good!"
                 return
 
             case "No_Question":
-                state.chatbotText = "no question for now!"
+                handState.chatbotText = "no question for now!"
                 return
 
             case "Webcam_Microphone":
@@ -2078,7 +2123,7 @@ function handGestureAction(gestureName) {
                 webcam_microphone[0].click();
                 webcam_microphone[1].click();
 
-                state.chatbotText = "";
+                handState.chatbotText = "";
                 return
 
             case "Stick_Captions":
@@ -2087,7 +2132,7 @@ function handGestureAction(gestureName) {
                     cap.click();
                 }
 
-                state.chatbotText = "";
+                handState.chatbotText = "";
                 return
         }
     }
@@ -2099,7 +2144,7 @@ function handGestureChatBox(gestureName) {
     // Index 2 == meet chatbox
     var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
 
-    if (meetTool.length != 0 && state.username != null) {
+    if (meetTool.length != 0 && handState.username != null) {
 
         if (meetTool[2].ariaPressed === "false") {
             meetTool[2].click();
@@ -2111,10 +2156,10 @@ function handGestureChatBox(gestureName) {
         setTimeout(function () {
             var textarea = document.getElementsByTagName("textarea");;
 
-            if (textarea != null && state.chatbotText != "") {
+            if (textarea != null && handState.chatbotText != "") {
                 // console.log(textarea[0]);
                 textarea[0].click();
-                textarea[0].value = 'ChatBot: \n' + state.username + ' ' + state.chatbotText;
+                textarea[0].value = 'ChatBot: \n' + handState.username + ' ' + handState.chatbotText;
 
                 // Assign Enter key to Google Meet's chatbox to send message
                 const keyboardEvent = new KeyboardEvent('keydown', {
@@ -2128,15 +2173,15 @@ function handGestureChatBox(gestureName) {
 
                 textarea[0].dispatchEvent(keyboardEvent);
 
-                // Append the gesture detected to Gogole Sheet (Based on state.sheetCode.sheetID)
-                if (state.sheetCode.sheetID !== null){
+                // Append the gesture detected to Gogole Sheet (Based on handState.sheetCode.sheetID)
+                if (handState.sheetCode.sheetID !== null) {
                     var data = {
                         name: "meetAction",
-                        username: state.username,
+                        username: handState.username,
                         gesture: gestureName,
-                        sheetID: state.sheetCode.sheetID
+                        sheetID: handState.sheetCode.sheetID
                     }
-    
+
                     chrome.runtime.sendMessage(data);
                 }
             }
@@ -2162,9 +2207,9 @@ function handInRealTime() {
 
     async function handPoseFrame() {
 
-        var ctx = state.canvas.getContext("2d");
-        ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-        ctx.drawImage(state.video, 0, 0);
+        var ctx = handState.canvas.getContext("2d");
+        ctx.clearRect(0, 0, handState.canvas.width, handState.canvas.height);
+        ctx.drawImage(handState.video, 0, 0);
 
         // Need to open Google Meet People Tool to get current username
         var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
@@ -2172,7 +2217,7 @@ function handInRealTime() {
         // Get Current username
         if (meetTool.length != 0) {
 
-            if (state.username == null) {
+            if (handState.username == null) {
                 if (meetTool[1].ariaPressed === "false") {
                     meetTool[1].click();
 
@@ -2181,7 +2226,7 @@ function handInRealTime() {
                     setTimeout(function () {
                         if (document.getElementsByClassName("kvLJWc")[0] != null) {
                             var username = document.getElementsByClassName("kvLJWc")[0].getElementsByTagName("span")[0].innerHTML;
-                            state.username = username;
+                            handState.username = username;
 
                             // Delay for 250 ms to let Google Meet able respond to this click()
                             setTimeout(function () {
@@ -2193,50 +2238,12 @@ function handInRealTime() {
             }
         }
 
-        if (state.handModuleIsOn) {
-
-            // Change Gesture without refresh page
-            // enable and disable gesture based on state.handGesture
-            if (state.handGesture === "number") {
-
-                // Number
-                for (let i = 0; i < numberGestureArr.length; i++) {
-                    handsfree.gesture[numberGestureArr[i]].enable()
-                }
-
-                // Sign
-                for (let i = 0; i < signGestureArr.length; i++) {
-                    handsfree.gesture[signGestureArr[i]].disable()
-                }
-
-            } else if (state.handGesture === "sign") {
-
-                // Number
-                for (let i = 0; i < numberGestureArr.length; i++) {
-                    handsfree.gesture[numberGestureArr[i]].disable()
-                }
-
-                // Sign
-                for (let i = 0; i < signGestureArr.length; i++) {
-                    handsfree.gesture[signGestureArr[i]].enable()
-                }
-
-            }else{ // Disable all gesture for Mosue function
-                // Number
-                for (let i = 0; i < numberGestureArr.length; i++) {
-                    handsfree.gesture[numberGestureArr[i]].disable()
-                }
-
-                // Sign
-                for (let i = 0; i < signGestureArr.length; i++) {
-                    handsfree.gesture[signGestureArr[i]].disable()
-                }
-            }
+        if (handState.handModuleIsOn) {
 
             // Handsfree returing data
             if (Object.keys(handsfree.data).length !== 0) {
 
-                if (state.handStatusDrawing === 'start') {
+                if (handState.handStatusDrawing === 'start') {
                     if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
 
                         const gesture = handsfree.model.hands.getGesture();
@@ -2250,23 +2257,23 @@ function handInRealTime() {
                             handGesture = gesture[1];
                         }
 
-                        if (state.handGesture !== 'mouse') {
+                        if (handState.handGesture !== 'mouse') {
                             if (handGesture.name !== "") {
 
                                 handGestureAction(handGesture.name);
 
-                                if (state.chatbotText != null && state.chatbotEnable == true) {
+                                if (handState.chatbotText != null && handState.chatbotEnable == true) {
                                     // Let Google Meet send message
                                     handGestureChatBox(handGesture.name);
-                                    state.chatbotEnable = false;
+                                    handState.chatbotEnable = false;
                                 }
 
-                                state.statusBox.innerHTML = "Gesture: " + handGesture.name;
+                                handState.statusBox.innerHTML = "Gesture: " + handGesture.name;
 
                             } else {
-                                state.previousGesture = "undefined";
-                                state.statusBox.innerHTML = "Gesture: Undefined";
-                                state.chatbotEnable = false;
+                                handState.previousGesture = "undefined";
+                                handState.statusBox.innerHTML = "Gesture: Undefined";
+                                handState.chatbotEnable = false;
                             }
                         }
 
@@ -2287,7 +2294,7 @@ function handInRealTime() {
                         }
 
                     } else {
-                        state.statusBox.innerHTML = "Finding Hands...";
+                        handState.statusBox.innerHTML = "Finding Hands...";
                     }
 
                     const time = Date.now();
@@ -2300,7 +2307,7 @@ function handInRealTime() {
                         console.info('FPS: ', fps);
                     }
                 } else {
-                    state.statusBox.innerHTML = "";
+                    handState.statusBox.innerHTML = "";
                 }
             }
         }

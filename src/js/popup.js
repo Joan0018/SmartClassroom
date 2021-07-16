@@ -256,6 +256,7 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
     chrome.storage.local.get(['hasCapturedStream'], (data) => {
       if (data.hasCapturedStream) {
         chrome.runtime.sendMessage({action: 'handsfreeStart'})
+        chrome.storage.sync.set({ "handStatusDrawing": "start" });
         setHandsfreeState(true)
       } else {
         chrome.runtime.openOptionsPage()
