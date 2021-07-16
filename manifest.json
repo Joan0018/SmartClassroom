@@ -50,9 +50,9 @@
 				"js/translations.js",
 				"js/videoConfiguration.js"],
 			"css": [
-				"css/material-components.min.css",
-				"css/style.css",
-				"css/btn.css"]
+				"assets/css/material-components.min.css",
+				"assets/css/style.css",
+				"assets/css/btn.css"]
 		}
 	],
 	"oauth2": {
