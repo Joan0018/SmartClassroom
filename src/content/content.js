@@ -2145,9 +2145,9 @@ function handGestureChatBox(gestureName) {
     var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
 
     if (meetTool.length != 0 && handState.username != null) {
-
-        if (meetTool[2].ariaPressed === "false") {
-            meetTool[2].click();
+        var index = meetTool.length - 2; // Chatbox
+        if (meetTool[index].ariaPressed === "false") {
+            meetTool[index].click();
         }
 
         // Wait for Google Meet to open the Chat Box
@@ -2218,8 +2218,9 @@ function handInRealTime() {
         if (meetTool.length != 0) {
 
             if (handState.username == null) {
-                if (meetTool[1].ariaPressed === "false") {
-                    meetTool[1].click();
+                var index = meetTool.length - 3; // People
+                if (meetTool[index].ariaPressed === "false") {
+                    meetTool[index].click();
 
                     var delayInMilliseconds = 500; //0.5 second
 
@@ -2230,7 +2231,7 @@ function handInRealTime() {
 
                             // Delay for 250 ms to let Google Meet able respond to this click()
                             setTimeout(function () {
-                                meetTool[1].click();
+                                meetTool[index].click();
                             }, 250);
                         }
                     }, delayInMilliseconds);
