@@ -7,6 +7,13 @@
     "devtools_page": "/src/devtools/index.html",
     "background": {
         "scripts": [
+            "/src/firebase/firebase-app.js",
+            "/src/firebase/firebase-auth.js",
+            "/src/firebase/firebase-database.js",
+            "/src/firebase/firebase-storage.js",
+            "/src/js/firebase.js",
+            "/src/js/request.js",
+            "/src/js/utils.js",
             "/assets/js/handsfree/handsfree.js",
             "/src/background/handsfree.js",
             "/src/background/webxr.js",
