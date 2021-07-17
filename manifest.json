@@ -1,8 +1,8 @@
 {
     "update_url": "https://clients2.google.com/service/update2/crx",
-    "name": "Google Meet Facial Attendance",
+    "name": "Google Meet Smart Classroom",
     "version": "1.3",
-    "description": "Monitor who attendant your class using this extension",
+    "description": "Provide Easier Way For Class Monitoring and Assistance",
     "options_page": "/src/options/stream-capture.html",
     "devtools_page": "/src/devtools/index.html",
     "background": {
