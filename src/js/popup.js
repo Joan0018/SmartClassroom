@@ -80,7 +80,7 @@ const $el = {
     status: document.querySelector('#status'),
     ckHand: document.querySelector('#ckHand'),
     ddlHandGesture: document.querySelector('#ddlHandGesture'),
-    // sheetCode: document.querySelector('#sheetCode')
+    sheetCode: document.querySelector('#sheetCode')
 }
 
 let previousCK;
@@ -92,57 +92,57 @@ var txtInfo = document.getElementById("txtInfo");
 Remarks: Directly refresh chrome extension will cause system setup sheetCode value (Not Recommended)
 Recommended: Stop Model instead of directly refresh
 */
-// chrome.storage.sync.get(['sheetCodeIsOn'], (result) => {
-//     if (result.sheetCodeIsOn !== null) {
+chrome.storage.sync.get(['sheetCodeIsOn'], (result) => {
+    if (result.sheetCodeIsOn !== null) {
         
-//         // To prevent system auto fill when user directly refresh extension instead stop the model
-//         if(!$el.start.classList.contains('d-none')){
-//             $el.sheetCode.value = result.sheetCodeIsOn.sheetCode;
-//             $el.sheetCode.readOnly = true;
-//         }else{
-//             $el.sheetCode.value = '';
-//             $el.sheetCode.readOnly = false;
-//         }
+        // To prevent system auto fill when user directly refresh extension instead stop the model
+        if(!$el.start.classList.contains('d-none')){
+            $el.sheetCode.value = result.sheetCodeIsOn.sheetCode;
+            $el.sheetCode.readOnly = true;
+        }else{
+            $el.sheetCode.value = '';
+            $el.sheetCode.readOnly = false;
+        }
         
-//     } else {
-//         $el.sheetCode.readOnly = false;
-//     }
-// });
+    } else {
+        $el.sheetCode.readOnly = false;
+    }
+});
 
-// chrome.extension.onMessage.addListener(
-//     function (request, sender, sendResponse) {
-//         console.log(request);
+chrome.extension.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        console.log(request);
 
-//         if (request.name === "sheetCodeIsOn") {
-//             if (request.sheetCode !== null && request.detail !== null && request.sheetID !== null) {
+        if (request.name === "sheetCodeIsOn") {
+            if (request.sheetCode !== null && request.detail !== null && request.sheetID !== null) {
 
-//                 // Start Model
-//                 chrome.storage.local.get(['hasCapturedStream'], (data) => {
-//                     if (data.hasCapturedStream) {
-//                         chrome.runtime.sendMessage({ action: 'handsfreeStart' })
-//                         chrome.storage.sync.set({ "handStatusDrawing": "start" });
-//                         setHandsfreeState(true)
-//                     } else {
-//                         chrome.runtime.openOptionsPage()
-//                     }
-//                     window.close()
-//                 })
+                // Start Model
+                chrome.storage.local.get(['hasCapturedStream'], (data) => {
+                    if (data.hasCapturedStream) {
+                        chrome.runtime.sendMessage({ action: 'handsfreeStart' })
+                        chrome.storage.sync.set({ "handStatusDrawing": "start" });
+                        setHandsfreeState(true)
+                    } else {
+                        chrome.runtime.openOptionsPage()
+                    }
+                    window.close()
+                })
                 
-//                 // Let content.js able know the request data
-//                 chrome.storage.sync.set({ "sheetCodeIsOn": request });
+                // Let content.js able know the request data
+                chrome.storage.sync.set({ "sheetCodeIsOn": request });
 
-//                 $el.sheetCode.value = request.sheetCode;
-//                 $el.sheetCode.readOnly = true;
-//                 txtInfo.innerHTML = '';
+                $el.sheetCode.value = request.sheetCode;
+                $el.sheetCode.readOnly = true;
+                txtInfo.innerHTML = '';
 
-//             } else {
-//                 // Let content.js able know the request data
-//                 chrome.storage.sync.set({ "sheetCodeIsOn": null });
-//                 txtInfo.innerHTML = 'Sheet Code not found!';
-//             }
-//         }
-//     }
-// );
+            } else {
+                // Let content.js able know the request data
+                chrome.storage.sync.set({ "sheetCodeIsOn": null });
+                txtInfo.innerHTML = 'Sheet Code not found!';
+            }
+        }
+    }
+);
 
 chrome.storage.sync.get(['handModuleIsOn'], (result) => {
     $el.ckHand.checked = result.handModuleIsOn;
@@ -223,47 +223,30 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
  * Start the webcam
  * - If the user hasn't approved permissions yet, then visit the options page first
  */
-// $el.start.addEventListener('click', () => {
-//     var sheetID = document.getElementById('sheetCode');
-//     if (sheetID.value !== "") {
+$el.start.addEventListener('click', () => {
+    var sheetID = document.getElementById('sheetCode');
+    if (sheetID.value !== "") {
 
-//         if (/^\d{6}$/.test(sheetID.value)) {
+        if (/^\d{6}$/.test(sheetID.value)) {
 
-//             txtInfo.innerHTML = 'Connecting...';
+            txtInfo.innerHTML = 'Connecting...';
 
-//             // Sned message to background to check whether sheet code is valid
-//             var data = {
-//                 name: 'sheetCode',
-//                 code: sheetID.value,
-//             }
-//             chrome.runtime.sendMessage(data);
+            // Sned message to background to check whether sheet code is valid
+            var data = {
+                name: 'sheetCode',
+                code: sheetID.value,
+            }
+            chrome.runtime.sendMessage(data);
 
-//         } else {
-//             txtInfo.innerHTML = 'Please Enter 6 digit number only!';
-//         }
+        } else {
+            txtInfo.innerHTML = 'Please Enter 6 digit number only!';
+        }
 
-//     } else {
-//         txtInfo.innerHTML = 'Please Enter Sheet Code!';
-//     }
+    } else {
+        txtInfo.innerHTML = 'Please Enter Sheet Code!';
+    }
 
-// })
-
-/**
- * Start the webcam
- * - If the user hasn't approved permissions yet, then visit the options page first
- */
- $el.start.addEventListener('click', () => {
-    chrome.storage.local.get(['hasCapturedStream'], (data) => {
-      if (data.hasCapturedStream) {
-        chrome.runtime.sendMessage({action: 'handsfreeStart'})
-        chrome.storage.sync.set({ "handStatusDrawing": "start" });
-        setHandsfreeState(true)
-      } else {
-        chrome.runtime.openOptionsPage()
-      }
-      window.close()
-    })
-  })
+})
 
 /**
  * Stop the webcam

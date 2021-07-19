@@ -33,15 +33,15 @@ function getCert() {
     var cert = //your json key (downloaded earlier) goes here
     {
         "type": "service_account",
-        "project_id": "smartclassroom-319211",
-        "private_key_id": "9c12436e8fc9a61763415a73684b5859c8cf5f45",
-        "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDlV2yr4qPkuBTh\n8qHB1wwhF2ClnOuZEMqLDyAO7IBEI6FCsovCRQxoQJiXYpnmrv2O/hWzg8VbJYgy\nyPxtqeJk+lBsV433PAeAH6rH6YDGUhZQTL344TuJLEVAbn+oekwkDHzDITkyXAqy\nRPpGTvlhwlOfGQid7F9TyFJ3vEzGNWuKRB7tttT/JW2ek54KfXZzV4R5MoeKDsb3\nZiAuYsP1tJNducqbH3Q+mBeKyQgNpYW90CWy5ECytKLsVa2h3zklg4dqJiFgX+e0\nyXgZmkY3EvbwVgytY9uDPm2BB/ESJD6fPhMHGGqIFgfAyr7LdHYK36j/02Oh9JsL\n//nFnxlnAgMBAAECggEAB1HSp8BpsgYSBzgYOOM6gYqJIiAFAPNL6O5IUVGeXQ5f\nZOKP8AOw0Vmmb8Z3hP5MHME37hfO4l7V9FD9MCl+OUd9Q51JFv1Ke/4GvwSmgIM5\nhRc975s4rDhxKWJIHsIbJgIOr/z3zLIAAWU5hlRE71LQGmwmc0E1CwEsvfeQ4mPd\n8uwy6OvisDEQDEa898qm3o26w0W5zDxZn8IL0PLXImB/bavf6x67Ye6dig+v5Onr\nUqBQ6pC3RARgXET+OumtKCp5fcpDxYZrqwT9IUgCxVX2G7o38GN7uPTJqqYuebq9\nzdPzi29nL22uhNyM1lzxqIhTDlTokUv4kgvhBlayYQKBgQDy1xgI43hvl+oY/EqS\nbvpJtpRlNIsD7/5wPvXgjLD6UPeheC90kGHUrbNsj02Jl9RGhyZcbUhJbI3i6ZM6\nfIvNSt9HJWTZzTJT5DPxhyPI8O9a8T4QsBTCx+vK6MOEPbJtYzTF3CHMYilYhvv8\nI9y6JA+gmWaqk+3Gj0eTMPaAkQKBgQDxxRBdYQC34ozapphdgOC4+L3m9+WEQl+V\nVJFDtkHfMsv7YbBTzHyc/wELq2lN1qaqulvWtWWQS3U82gBHA+JIgKXsxBIm1z6Q\n57eSnWuCNXH3a16FpS1NodgLzA6ZTyz39m0V7CSFFCdGbxRv+Fs6zY+/IVwr9Eyw\nvz7mKp72dwKBgQCbLojVZUdZSKL4RIEDApg+8sXxxpnvcjYOVK2bSUzvKT6VmM/6\nlSlvV3EJNqo9+yBT0ZnaBpvjD9O75beH8H8GOYplVKgV5uL6aSIofkuH5S+P1gnr\ncBpUPp2XlRccMrEK5hKbPgj7Kt9xCxGMFv6+lLzHzD+nUdDoyjbbALcFgQKBgFpH\nU80Ko9IGbsJW4x5HOaLYf1D30GSKxFZmtberHv3RYgoEeGtSOFYHgsRwxWmjdaja\n3eBW7A3tn2GRpfjeomigYVUAAicuyNYjMJE25yY//sZ8+Va+TyRmAt6k2+6zef89\nrY46F4j59ZB/ego1mxtiFwMv2dMv7lMxlrMrxyARAoGBAJjdWGbDCWjt+xdq7R9d\n0hPOsJWFl+jJUzb1CoE8R/Y9Zc9ISjElj2keGoGz0lWsinpYXXXOP9eBpJHlDOT5\nO74lihRnRa8BUuokys5ZLKdJogZi4U4DQosYJ02byHqlIawXgdgkA3997bz6xKv7\no2En9Gzuvrl7RG/LUx8+03Hy\n-----END PRIVATE KEY-----\n",
-        "client_email": "user-644@smartclassroom-319211.iam.gserviceaccount.com",
-        "client_id": "103304609163647483410",
+        "project_id": "tidy-rainfall-319700",
+        "private_key_id": "32fa7038d4277f57aef9f006633dac2eeec7aaec",
+        "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC2NvKVVlYqLGVx\nhklkWMPET7ag7gv+daIAjTWR4q7knrwQea+j5GD/gva1v+jsDH+IHiTIpL9ks3Yn\nBkhihBkY25ztgGZAPiuUkB9rwHex+wGb4HEOSzJNUzdI+tsLxWxyRMi6uABjVSdp\nuZQ8axjdqt66f7lVDC3gj+5K7AKcMfMNmSHZhFl41BbZHyJJM4LMvN2dd98vzrFW\nwJxJiqN7m2Caf9FVcdoIB9DOEGx0b4AG0UrVj9MBaL3nLctBC4pWZuXAGbR/PBJ4\nMMh2F484vrBF2J5/sIG3aqAgvG2ZT2rP+MeGzzfNxGTWxQGhJ7/WWCeZ2KEz1bU/\nzHKlzOfDAgMBAAECggEAAUqdaIqOnMjoxSe3AHOSm6MW/8gAJMMPrWJS1WBebfdk\nDNfX81jsiRMUDZC5JWcnRj80comcY6nT9g3Y2H3oMaFo2NQWpXDrXSeyWVCpaIUH\na2PpWTkWN68VzroccFZrYNn09EHWmt2hJGIw10bJC9Uos/iwxxYJgzRx82z9zb6X\n0cBxFwMnlUp2brsRqBKWONCtI/how8KemKx/6LGUaeq9+zzLAJ9igLt+i48+wUbR\n6LQYXdkQJPGm9P5AvEcK3ZLcFbmvXVy4LuneiOLuoDA3QHrYjiY84+d5e+l1PVWu\nIn/SRrOP0ETsyv9oeMR+bZyDI3w4B8DAJkK5ADZVhQKBgQDlQp3smCrvjFh7SLHJ\n6Serz2gFj8QPvUmoLHxZKIMJOjRlxYhUrUEnEP0sO8wWccwthRng4bnGyIAluKBO\nUyKQpyD40ffOhi+OBIt9UZouyDGvy8ZhihOKgt8VX52Dfq2kLIeGEdDAbbUkcg8J\nA3MS5/iippERbG+3ZId7MAgKfQKBgQDLd53g9SiWC1ImV6jt7dQDaNuep7dDXeqF\n1Z1/7CCeqpUOIflInyijeAHyhs8MJZfr+8odGecjFyBQLeLJhQrKf8B28QPP5tCx\n2L/GuvdyAml8phuWhUvte3CZJXVbwEpwSaHg/yQ14kU6X6PM+t2geQPk2S3s73ni\n2E8EuRkPPwKBgHUoVPH6VT6zdugRnyFyr95CEIN/E4+DiOeTTDx30nbdsrcred7j\n5v6i1O5M5J+3qcK9WRst3zUxcyNTtUAxheFsNxJQopV8x0KJGguBrwwnLBUNSqS/\n3fqTpJMUmLcA/pV+WAdwhUBBECe+zeYqSB0qREpCWrIPuwt6KS4Pvpw1AoGAR2M2\nn4EktlBOiGllOeWh53hY5feOUzKWYFKsqf9dCo5rMcQ1xIcjKQeoF0G5T1e5T/DN\n3xwBfsxUaA1RbschHB9qldDGN6GSQ3P7BWz/+J5kCHn3X/5wv2f5/6Gm5YQ4GeGb\nzGd4evditrJrtDWooO8UsKyKcoErUK34O33+Dt0CgYAWWoUUzMM3HWFfVOVsrW0P\nC/DNyq64KDF/MTZO8QPtBzfYhcUKi11vaHY63zTMGatc9AM59noyMOrXvKo5t30m\neujGfiGyFkKHLcEwwqHzBPdDcWitXqY+E1Azp/N7iYOOkeM9WS8dnaOFxkwouzaa\nlOg9sWNBRe3WY8moaOrwTg==\n-----END PRIVATE KEY-----\n",
+        "client_email": "smartclassroomserviceaccount@tidy-rainfall-319700.iam.gserviceaccount.com",
+        "client_id": "101198967386035525868",
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/user-644%40smartclassroom-319211.iam.gserviceaccount.com"
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/smartclassroomserviceaccount%40tidy-rainfall-319700.iam.gserviceaccount.com"
     }
 
     return cert;
@@ -71,9 +71,9 @@ postJWT(getJWT(), function (response) {
     clientToken = JSON.parse(response).access_token;
 });
 
-const API_KEY = 'AIzaSyADyoalWfI5ZIDSjvXE7lyZunZNPdIka1s';
+const API_KEY = 'AIzaSyCzT1Ltha85DX-xRemUx1b9JkipCdPEgiU';
 const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-const MANAGEMENT_SPREADSHEET_ID = '10Jz7g8PxIu_f03wIMIfyCaOA6DfRtmuQw3hY_iUMwMY';
+const MANAGEMENT_SPREADSHEET_ID = '1Oa6kkkpFVh7o98gEmoNgnAsQmvNeRmzu8awyNrp3wWI';
 const MANAGEMENT_SPREADSHEET_TAB_NAME = 'main';
 
 // Initialize gapi
