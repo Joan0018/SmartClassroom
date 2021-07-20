@@ -3,11 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		if (!tabs[0].url.match(/https:\/\/meet.google.com\/.+-.+-.+/)) return;
 
 		document.querySelector('.popup-face-register').addEventListener('click', function() {
-			chrome.tabs.sendMessage(tabs[0].id, {data: 'add-class'});
+			chrome.tabs.sendMessage(tabs[0].id, {data: 'register-face'});
 			window.close();
 		}, false);
 		document.querySelector('.popup-take-attendance').addEventListener('click', function() {
-			chrome.tabs.sendMessage(tabs[0].id, {data: 'edit-class'});
+			chrome.tabs.sendMessage(tabs[0].id, {data: 'take-attendance'});
 			window.close();
 		}, false);
 		document.querySelector('.popup-overall-analysis').addEventListener('click', function() {
