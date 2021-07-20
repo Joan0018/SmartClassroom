@@ -7,7 +7,7 @@ class Utils {
 
     static log(message) {
         console.log(
-            `%c[A4GM]%c ${message} `,
+            `%c[GMFA]%c ${message} `,
             'color:white;background:#058D80',
             'font-weight:bold;color:#058D80;'
         )

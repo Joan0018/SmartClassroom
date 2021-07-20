@@ -24,7 +24,6 @@
     },
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl7bOJJ0a11iZA9a7Kl/hWbHcLHUxf6Ex34Agzet8A2q7XZjAYoOglgZsnz7dG2f42XUD3k//haJlExdj/4lX6Xhne5iJr9i/0EJtDjyr6IjB0FVQV2Nhp0UgKMhrKFXyY+qH9UbZp5q730WhF3lugnbq6v8Ej2TsiW34TBDmh2txrEJI/gM2LkcJmszhqkNo/aWFN6S3R1bnC3tR3RLg0akeW0IIUPtZ9wbO7d8vKPiAgdAx0+2ZPbMNDzr9hHxBOWTSTO++8mQ8CkqEcaU+jyFjG+Jyj995v95sXo/c46WJw8geijm1okLpYKt+fdpHzbm+lRHiX0Z5HNkuQV+N6wIDAQAB",
     "web_accessible_resources": [
-        "src/js/inject.js",
         "src/js/utils.js",
         "src/models/face_expression_model-weights_manifest.json",
         "src/models/face_landmark_68_model-weights_manifest.json",
@@ -42,7 +41,6 @@
         "src/models/ssd_mobilenetv1_model-shard1",
         "src/models/age_gender_model-shard1",
         "src/models/age_gender_model-weights_manifest.json",
-        "src/js/view.js",
         "assets/js/handsfree/*",
         "assets/js/devices.json",
         "assets/3d/hall_empty.glb",
@@ -74,7 +72,6 @@
                 "src/js/html-templates.js",
                 "src/js/studentList.js",
                 "src/js/contentScript.js",
-                "src/js/attendanceContent.js",
                 "src/js/classButtons.js",
                 "src/js/storeFace.js",
                 "src/js/takeAttendance.js",

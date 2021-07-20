@@ -1,5 +1,8 @@
-const classHTML = `<div 
-    id="card1"
+/**
+ * HTML for the Facial Registration Card
+ */
+const registerFaceHTML = `<div 
+    id="registerFaceCard"
     style="
         display: flex;
         position: absolute;
@@ -28,7 +31,7 @@ const classHTML = `<div
             <canvas id="canvas" style="display: block;margin:auto;" width="640" height="480" ></canvas>
             <video id="video" style="display: block;position:absolute;margin:auto;visibility:hidden;" width="640" height="480" autoplay="true" muted></video>
         </div>
-        <button id="ICP" class="hover-state"> Start Capture Face </button>
+        <button id="SRF" class="hover-state"> Start Capture Face </button>
         <div class="separator"></div>
         <button id="TP" class="hover-state"> Take Photo </button>
         <div class="separator"></div>
@@ -39,36 +42,11 @@ const classHTML = `<div
     </div>
 </div>`;
 
-const attendanceHTML = `
-<div class="container">
-    <h4 class="isOLae card-title-2" style="padding-left: 0px;">Attendance</h4>
-    <div class="settings">
-        <div style="display: flex; flex-direction: row; align-items: center;">
-            <p class="class-choice-name" style="width: 50px;"> Class: </p>
-            <select class="class-choice">
-            </select>
-        </div>
-        <div style="display: flex; flex-direction: row; align-items: center;">
-            <p class="show-choice-name" style="width: 50px;"> Sort: </p>
-            <select class="show-choice">
-            </select>
-
-            <p class="class-start-time-name"> Period start: </p>
-            <input class="class-start-time" type="time"/>
-        </div>
-    </div>
-    <div class="list-container">
-        <ul class="list-students">
-        </ul>
-    </div>
-    <button class="save-button hover-state">Export</button>
-</div>
-<div role="separator" class="kCtYwe kyoOSe"></div>
-`;
-
-
-const editHTML = `
-<div id="card2"        
+/**
+ * HTML for Take Attendance Card
+ */
+const takeAttendanceHTML = `
+<div id="takeAttendanceCard"        
     style="
         display: flex;
         position: absolute;
@@ -94,7 +72,9 @@ const editHTML = `
     </div> 
 </div>`;
 
-
+/**
+ * Current HTML for overall Analysis Card (Haven Done)
+ */
 const deleteHTML = `
 <div id="card3"        
     style="
@@ -117,6 +97,9 @@ const deleteHTML = `
     </div> 
 </div>`
 
+/**
+ * HTML for the button shown in the bottom of Google Meet
+ */
 const buttonHTML = `<div class="r6xAKc">
 <span data-is-tooltip-wrapper="true"
     ><button
@@ -175,7 +158,12 @@ const buttonHTML = `<div class="r6xAKc">
 >
 </div>`
 
+
 const sheetsSVG = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate;padding-right: 4px;" viewBox="0 0 64 88" width="12pt" height="12pt"><defs><clipPath id="_clipPath_KAvDqF0Ev6kg4Yj0RZmUZ8LSvIjixP4M"><rect height="88" width="64"></rect></clipPath></defs><g clip-path="url(#_clipPath_KAvDqF0Ev6kg4Yj0RZmUZ8LSvIjixP4M)"><clipPath id="_clipPath_tDC5NP6inp0FhE5TGFdi9OsXat0bSKFd"><rect transform="matrix(1,0,0,1,0,0)" height="88" width="64" y="0" x="0"></rect></clipPath><g clip-path="url(#_clipPath_tDC5NP6inp0FhE5TGFdi9OsXat0bSKFd)"><g><path d=" M 58 88 L 6 88 C 2.7 88 0 85.3 0 82 L 0 6 C 0 2.7 2.7 0 6 0 L 42 0 L 64 22 L 64 82 C 64 85.3 61.3 88 58 88 Z  M 17 39.5 L 29.5 39.5 L 29.5 46 L 17 46 L 17 39.5 L 17 39.5 L 17 39.5 L 17 39.5 L 17 39.5 Z  M 17 51 L 29.5 51 L 29.5 57.5 L 17 57.5 L 17 51 L 17 51 L 17 51 L 17 51 L 17 51 Z  M 47 57.5 L 34.5 57.5 L 34.5 51 L 47 51 L 47 57.5 L 47 57.5 L 47 57.5 L 47 57.5 L 47 57.5 Z  M 47 46 L 34.5 46 L 34.5 39.5 L 47 39.5 L 47 46 L 47 46 L 47 46 L 47 46 L 47 46 Z  M 12 34.5 L 12 62.5 L 52 62.5 L 52 34.5 L 12 34.5 L 12 34.5 L 12 34.5 L 12 34.5 L 12 34.5 Z " fill-rule="evenodd"></path></g></g></g></svg>`
+
+/**
+ * HTML for side bar
+ */
 const panelHTML = `<div
     class="WUFI9b qdulke"
     id="panel"

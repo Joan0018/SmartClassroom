@@ -17,12 +17,16 @@ body {
     margin-top: 0.5em;
 }
   
-.popup-add-class {
+.popup-face-register {
     background: #00796b;
     color: white;
 }
-  
-.popup-del-class {
+
+.popup-take-attendance {
+    background: #f37c04;
+    color: white;
+}
+.popup-overall-analysis {
     background: #c5221f;
     color: white;
 }

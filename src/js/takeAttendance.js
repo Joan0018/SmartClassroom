@@ -77,10 +77,11 @@ function facialAttendance(){
 }
 
 function saveAttendance(){
+    clearVideo();
     stopWebCamera();
-    document.getElementById('card2').style.visibility = 'hidden';
-    let meetingCode = window.location.pathname.substring(1);
-    chrome.runtime.sendMessage({command: "SaveStudentAttendance", data: attendedStud, type: meetingCode}, (response) => {
+    document.getElementById('takeAttendanceCard').style.visibility = 'hidden';
+    let meetingCode = getMeetCode();
+    chrome.runtime.sendMessage({command: "SaveStudentAttendance", data: attendedStud, type: meetingCode, email: currentEmail}, (response) => {
         console.log("Take Student Attendance")
     });
 

@@ -1,4 +1,6 @@
-//Clear the previous canvas view 
+/**
+ * Clear previous convas view
+ */
 function clearVideo(){
 	var canvas = document.getElementById('canvas')
 	const ctx = canvas.getContext('2d');
@@ -9,7 +11,9 @@ function clearVideo(){
 	ctx2.clearRect(0, 0, 640, 480);
 }
 
-//Disable Web Camera after the user end capturing face
+/**
+ * Disable the web Camera after finish capture face
+ */
 function stopWebCamera(){
 
 	video = document.getElementById('video'),

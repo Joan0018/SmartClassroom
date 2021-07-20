@@ -1,6 +1,6 @@
-// Your web app's Firebase configuration
-console.log("Please Wait...Firebase Loading")
-const startTime = ~~(Date.now() / 1000)
+/**
+ * Chrome Extension Firebase Configuration
+ */
 var firebaseConfig = {
     apiKey: "AIzaSyCFe9RV9CHaR-yqzCwe65K8K8iQKxozLNY",
     authDomain: "smartclassroomjs.firebaseapp.com",
@@ -10,14 +10,17 @@ var firebaseConfig = {
     appId: "1:356809279066:web:bf986b4e7cb3c5b2dd3a63"
 };
 
-// Initialize Firebase
+/**
+ * Initialize Firebase
+ */
 firebase.initializeApp(firebaseConfig);
-console.log("Congratulations, Firebase Successfully Loaded")
-
+/**
+ * Current Start time, Required to change to contentScript
+ */
+const startTime = ~~(Date.now() / 1000)
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.data) {
     	case "starting...": {
-
 		    chrome.tabs.query({currentWindow: true, active: true }, function (tabs) {
 		        let ready = false;
 		        if (tabs[0].id === sender.tab.id) {
@@ -39,12 +42,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
         case "saveFaceToFirebase": {
             chrome.identity.getAuthToken({'interactive': true}, function(token) {
-                chrome.identity.getProfileUserInfo(
-                    function(info){
+                    if(request.data.length > 0) {
 
-                        if(request.data.length > 0) {
-                            console.log(request.data.length)
-                            for(let i = 1; i < request.data.length; i++){ 
+                        for(let i = 1; i < request.data.length; i++){ 
             
                                 var studFace = request.data[i].face;
                                 var studName = request.data[0].name;
@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                                 dbRealTime.set({
                                     Name: studName,
                                     ID: studID,
-                                    Email: info.email,
+                                    Email: request.email,
                                     Gender: gender
                                 });
                                 
@@ -80,10 +80,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                                 }).catch(error => {
                                     console.log(error);
                                 });
-                            }
                         }
                     }
-                );
             });
 
 
@@ -99,7 +97,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                         'image': childSnapshot.val().Images
                     })
                 });
-                console.log(studList)
 
                 sendResponse({
                     response: studList
@@ -122,6 +119,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             dbAttd.set({
                 Name: studName,
                 ID: studID,
+                Email: request.email,
                 Time: new Date().toLocaleTimeString()
             });
         }
@@ -129,7 +127,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             chrome.identity.getAuthToken({ interactive: true }, (token) => {
                 var attedList = [];
                 firebase.database().ref('AttendedStudent/' + request.data).on('value', (snapshot) => {
-                    console.log(snapshot.val());
                     snapshot.forEach(function(childSnapshot) {
                         attedList.push({
                             'id': childSnapshot.val().ID,
@@ -147,7 +144,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
 });
 
-//Read Token
+/**
+ * 
+ * @returns {String} token
+ */
 function authenticate() {
     return new Promise((resolve, reject) => {
         chrome.identity.getAuthToken({ interactive: true }, (token) => {
@@ -160,6 +160,12 @@ function authenticate() {
     })
 }
 
+/**
+ * 
+ * @param {*} token 
+ * @param {*} callback 
+ * Refresh Token
+ */
 function refreshToken(token, callback) {
     chrome.identity.removeCachedAuthToken({ token: token }, () => {
         Utils.log('Removed cached auth token.')
@@ -168,6 +174,12 @@ function refreshToken(token, callback) {
 }
 // const notifierMap = new Map()
 
+/**
+ * 
+ * @param {String} token - Token generate from Chrome
+ * @param {String} code - Current Meeting Code
+ * @param {String} attend - String array which store the current student Attend
+ */
 async function createSpreadsheet(token, code, attend) {
     const body = {
         properties: {
