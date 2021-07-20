@@ -99,7 +99,7 @@ function addFaceCaptured(){
 	})
 
 	if(facesCapture.length > 5 ){
-		console.log("5 Images have been capture")
+		alert("Congratulations, Your Face is Successfully Captured")
 	}
 	else{
 		

@@ -208,7 +208,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             break;
         }
         case 'add-class': {
-            alert("Please Enter Full Name and Student ID as Registered in Student Intranet \nFormat of Input: \r\nName: XXXX XXXX XXXX \r\nStudent ID: XXWMRXXXXX")
+            alert("Please Enter Full Name and Student ID as Registered \nFormat of Input: \r\nName: XXXX XXXX XXXX \r\nStudent ID: XXWMRXXXXX \r\nClick the take photo button once you are ready")
             document.getElementById('registerFaceCard').style.visibility = 'visible';
             break;
         }

@@ -26,7 +26,6 @@ const registerFaceHTML = `<div
         </div>
 
         <p class="student-names" style="width: auto;"> Please put your face in front of camera </p>
-        <p class="student-names" style="width: auto;"> Please take 5 photos </p>
         <div class="tag-container">
             <canvas id="canvas" style="display: block;margin:auto;" width="640" height="480" ></canvas>
             <video id="video" style="display: block;position:absolute;margin:auto;visibility:hidden;" width="640" height="480" autoplay="true" muted></video>
