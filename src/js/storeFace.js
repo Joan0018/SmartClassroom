@@ -3,7 +3,9 @@ var dataURL;
 var studGender = [];
 var detectionsStore;
 
-//Capturing face when user click facial registration
+/**
+ * Capturing face when user click facial registration
+ */
 function facialRegistration() {
 
 	if(checkValidity()){
@@ -46,9 +48,6 @@ function facialRegistration() {
 			.withAgeAndGender()
 
 			if(detectionsStore.length > 0){
-
-				//extractFaceFromBox(video, detectionsStore[0].detection.box)
-		
 				const resizedDetections = faceapi.resizeResults(detectionsStore, displaySize)
 				faceapi.draw.drawDetections(context, resizedDetections)
 				faceapi.draw.drawFaceLandmarks(context, resizedDetections)
@@ -72,10 +71,9 @@ function facialRegistration() {
 }
 
 
-
-
-
-//Add the face being capture into an Array 
+/**
+ * Add the face being capture into an Array 
+ */
 function addFaceCaptured(){
     var studName = document.querySelector('.student-name').value;
 	var studID = document.querySelector('.student-id').value;
@@ -125,8 +123,13 @@ function addFaceCaptured(){
 		}
 	}
 }
-
-// This function extract a face from video frame with giving bounding box and display result into output image
+ 
+/**
+ * 
+ * @param {*} inputImage 
+ * @param {*} box 
+ * This function extract a face from video frame with giving bounding box and display result into output image
+ */
 async function extractFaceFromBox(inputImage, box){ 
 	const regionsToExtract = [
 		new faceapi.Rect( box.x - 10, box.y - 70, box.width + 75, box.height + 100)
@@ -146,11 +149,12 @@ async function extractFaceFromBox(inputImage, box){
 	}   
 
 	try{
-		Utils.log("In detection")
-		const detections = await faceapi.detectSingleFace(faceImages).withFaceLandmarks().withFaceDescriptor()     
+		if(faceImages != null){
+			const detections = await faceapi.detectSingleFace(faceImages).withFaceLandmarks().withFaceDescriptor()     
+		}
 	}
 	catch{
-		alert("123")
+		alert("Low quality of image found to be captured. Please take the photo again")
 	}
 } 
 
