@@ -14,10 +14,9 @@ var firebaseConfig = {
  * Initialize Firebase
  */
 firebase.initializeApp(firebaseConfig);
-/**
- * Current Start time, Required to change to contentScript
- */
-const startTime = ~~(Date.now() / 1000)
+
+var startTime;
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     switch(request.data) {
     	case "starting...": {
@@ -37,7 +36,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-	
+    
     switch(request.command) {
 
         case "saveFaceToFirebase": {
@@ -109,19 +108,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             return true;
         }
         case "SaveStudentAttendance":{
+
             var curData = request.data
             var fields = curData.split('-')
             var studID = fields[0];
             var studName = fields[1];
+            const attend = firebase.database().ref('AttendedStudent/' + request.type + '/' + request.data);
 
-            const dbAttd = firebase.database().ref('AttendedStudent/' + request.type + '/' + request.data);
-
-            dbAttd.set({
-                Name: studName,
-                ID: studID,
-                Email: request.email,
-                Time: new Date().toLocaleTimeString()
+            chrome.storage.sync.get(['start'], function(result) {
+                attend.set({
+                    Name: studName,
+                    ID: studID,
+                    Email: request.email,
+                    TakeTime: new Date().toLocaleTimeString(),
+                    StartTime: result.start,
+                    EndTime: ""
+                });
             });
+
+
         }
         case "RetrieveStudentAttend":{
             chrome.identity.getAuthToken({ interactive: true }, (token) => {
@@ -131,7 +136,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                         attedList.push({
                             'id': childSnapshot.val().ID,
                             'name': childSnapshot.val().Name,
-                            'time': childSnapshot.val().Time
+                            'time': childSnapshot.val().TakeTime
                         })
                     });
 
@@ -140,6 +145,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 }); 
                 createSpreadsheet(token, request.data,attedList)
             })
+        }
+        case "user-leave":{
+            if(request.active){
+                const dbAttd = firebase.database().ref('AttendedStudent/' + request.type + '/' + request.active);
+                dbAttd.update({
+                    'EndTime': request.data
+                })
+            }
+
         }
     }
 });
@@ -181,54 +195,57 @@ function refreshToken(token, callback) {
  * @param {String} attend - String array which store the current student Attend
  */
 async function createSpreadsheet(token, code, attend) {
-    const body = {
-        properties: {
-            title: 'Google Meet Facial Attendance',
-            spreadsheetTheme: getSpreadsheetTheme(),
-        },
+    if(attend.length > 0){
+        const body = {
+            properties: {
+                title: 'Google Meet Facial Attendance',
+                spreadsheetTheme: getSpreadsheetTheme(),
+            },
+        }
+        const init = {
+            method: 'POST',
+            async: true,
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        }
+        let spreadsheetId = null
+        let requests = []
+        console.log("Creating new attendance spreadsheet...")
+        // const notifierKey = `${className}-${code}`
+        // if (!notifierMap.has(notifierKey)) {
+        //     notifierMap.set(notifierKey, new Notifier(className, code))
+        // }
+        // const notifier = notifierMap.get(notifierKey)
+        // notifier.post(port, { progress: 0 })
+        const newSpreadsheet = await (
+            await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
+        ).json()
+        if (newSpreadsheet.spreadsheetId == undefined) {
+            throw newSpreadsheet.error
+        }
+        console.log(
+            `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
+        )
+        chrome.storage.local.set({
+            'spreadsheet-id': newSpreadsheet.spreadsheetId,
+        })
+        spreadsheetId = newSpreadsheet.spreadsheetId
+        //requests = requests.concat(updateSheetProperties(className, code, 0, '*'))
+        requests = requests.concat(createHeaders(0))
+        const icReqs = await initializeCells(code, 0,attend)
+        //notifier.post(port, { progress: 0.6 })
+        requests = requests.concat(icReqs)
+        Utils.log(token)
+        console.log(requests)
+        Utils.log(spreadsheetId)
+        const data = await batchUpdate(token, requests, spreadsheetId, 0)
+        //notifier.post(port, { done: true, progress: 1 })
+        //notifierMap.delete(notifierKey)
+        console.log('Initialize spreadsheet response:')
+        console.log(data)
     }
-    const init = {
-        method: 'POST',
-        async: true,
-        headers: {
-            Authorization: 'Bearer ' + token,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-    }
-    let spreadsheetId = null
-    let requests = []
-    console.log("Creating new attendance spreadsheet...")
-    // const notifierKey = `${className}-${code}`
-    // if (!notifierMap.has(notifierKey)) {
-    //     notifierMap.set(notifierKey, new Notifier(className, code))
-    // }
-    // const notifier = notifierMap.get(notifierKey)
-    // notifier.post(port, { progress: 0 })
-    const newSpreadsheet = await (
-        await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
-    ).json()
-    if (newSpreadsheet.spreadsheetId == undefined) {
-        throw newSpreadsheet.error
-    }
-    console.log(
-        `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
-    )
-    chrome.storage.local.set({
-        'spreadsheet-id': newSpreadsheet.spreadsheetId,
-    })
-    spreadsheetId = newSpreadsheet.spreadsheetId
-    //requests = requests.concat(updateSheetProperties(className, code, 0, '*'))
-    requests = requests.concat(createHeaders(0))
-    const icReqs = await initializeCells(code, 0,attend)
-    //notifier.post(port, { progress: 0.6 })
-    requests = requests.concat(icReqs)
-    Utils.log(token)
-    console.log(requests)
-    Utils.log(spreadsheetId)
-    const data = await batchUpdate(token, requests, spreadsheetId, 0)
-    //notifier.post(port, { done: true, progress: 1 })
-    //notifierMap.delete(notifierKey)
-    console.log('Initialize spreadsheet response:')
-    console.log(data)
+    
 }

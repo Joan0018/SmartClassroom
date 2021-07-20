@@ -14,6 +14,9 @@ function clearCards() {
  * Reset the variables after close the card
  */
 function registerStudentFace() {
+	if(facesCapture.length < 5){
+		alert("No face being stored in database");
+	}
 	clearCards();
 	clearVideo();
 	stopWebCamera();

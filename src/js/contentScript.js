@@ -2,7 +2,6 @@
  * To get the current google meet joined user's email
  */
 const currentEmail = document.getElementsByClassName("Duq0Bf")[0].innerHTML;
-
 /**
  * Initialize when meeting starts
  * Check whether the google meet start
@@ -10,7 +9,6 @@ const currentEmail = document.getElementsByClassName("Duq0Bf")[0].innerHTML;
 */
 const readyObserver = new MutationObserver(function (mutations, me) {
     if (document.getElementsByClassName('c8mVDd')[0]) {
-        const startTime = ~~(Date.now() / 1000)
         initialize();
         me.disconnect();
     }
@@ -40,6 +38,13 @@ function initialize() {
         },
         function (response) {
             if (response.ready) {
+                /**
+                 * Initialize the start time of the user joined and send to bakcground
+                 */
+                const startTime = new Date().toLocaleTimeString();
+                chrome.storage.sync.set({start: startTime}, function() {
+                    console.log('Start Time is set to ' + startTime);
+                });
                 /**
                  * To draw and Initialize the side bar in the google meet
                  */
@@ -192,6 +197,7 @@ function initialize() {
                 document.getElementById('SCF').addEventListener('click', facialAttendance, false);
                 
                 updateCards();
+                wait4Meet2End();
             }
         }
     );
@@ -266,4 +272,37 @@ function getMeetCode() {
     return document
         .querySelector('c-wiz')
         .getAttribute('data-unresolved-meeting-id')
+}
+
+/**
+ * Wait for the Google Meet to End
+ */
+function wait4Meet2End(){
+    // wait until the meeting is done
+    waitForElement( '[data-call-ended="true"]',function(){
+        try { 
+            var currentTime = new Date().toLocaleTimeString();
+            chrome.runtime.sendMessage({command: 'user-leave', type: getMeetCode(), active: attendedStud, data:currentTime});
+        } catch (e) {}
+        
+    } )
+}
+
+/**
+ * Simple function that waits until a specific element exists in the DOM...
+ * (References from Stack Overflow)
+ */
+function waitForElement(elementPath, callBack){
+    
+    let waitfor = elementPath === '[data-call-ended = "true"]' ? 10000 : 2500
+    
+    window.setTimeout( function(){
+        let itExists = document.querySelector( elementPath )
+        if( !itExists || itExists.length === 0 ) {
+            waitForElement( elementPath, callBack );
+        }
+        else{
+            callBack( elementPath, itExists );
+        }
+    }, waitfor )
 }

@@ -4,7 +4,7 @@ var attendedStud;
 
 function getNameList(){
     chrome.runtime.sendMessage({command: "RetrieveStudentName"}, (response) => {
-        console.log("Retrieve Student Name List From Firebase Database")
+        Utils.log("Retrieve Student Name List From Firebase Database")
         if (response.response.length > 0){
             for(let i = 0; i < response.response.length; i++){
                 studentList.push({
@@ -77,16 +77,23 @@ function facialAttendance(){
 }
 
 function saveAttendance(){
-    clearVideo();
-    stopWebCamera();
-    document.getElementById('takeAttendanceCard').style.visibility = 'hidden';
-    let meetingCode = getMeetCode();
-    chrome.runtime.sendMessage({command: "SaveStudentAttendance", data: attendedStud, type: meetingCode, email: currentEmail}, (response) => {
-        console.log("Take Student Attendance")
-    });
 
-    studentList = [];
-	labels = [];
+    if(attendedStud != null){
+        alert("Attendance " + attendedStud + " is taken.");
+        clearVideo();
+        stopWebCamera();
+        document.getElementById('takeAttendanceCard').style.visibility = 'hidden';
+        let meetingCode = getMeetCode();
+        chrome.runtime.sendMessage({command: "SaveStudentAttendance", data: attendedStud, type: meetingCode, email: currentEmail, time: Date.now()}, (response) => {
+            Utils.log("Take Student Attendance");
+        });
+    
+        studentList = [];
+        labels = [];
+    }
+
+    alert("Sorry, there is an error occured. Please try again");
+
 }
 
 function loadLabeledImages() {
@@ -132,11 +139,4 @@ function loadLabeledImages() {
         )
     }
 
-}
-
-function exportXML(){
-    console.log("Clicked")
-    chrome.runtime.sendMessage({
-		command: 'export'
-	})
 }

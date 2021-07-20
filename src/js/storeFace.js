@@ -76,7 +76,6 @@ function facialRegistration() {
 
 
 //Add the face being capture into an Array 
-
 function addFaceCaptured(){
     var studName = document.querySelector('.student-name').value;
 	var studID = document.querySelector('.student-id').value;
@@ -136,27 +135,36 @@ async function extractFaceFromBox(inputImage, box){
 	let faceImages = await faceapi.extractFaces(inputImage, regionsToExtract)
 
 	if(faceImages.length == 0){
-		console.log('Face not found')
+		Utils.log('Face not found')
 	}
 	else
 	{
+		Utils.log("In store")
 		faceImages.forEach(cnv =>{     
-			dataURL = cnv.toDataURL();      
+			dataURL = cnv.toDataURL(); 
 		})
 	}   
+
+	try{
+		Utils.log("In detection")
+		const detections = await faceapi.detectSingleFace(faceImages).withFaceLandmarks().withFaceDescriptor()     
+	}
+	catch{
+		alert("123")
+	}
 } 
 
 //Store the face by passing the array through sending message (Process will be taken in background.js)
 function storeFaceCaptured(){
 
-    if(facesCapture.length > 0){
+    if(facesCapture.length >= 5){
         chrome.runtime.sendMessage({command: "saveFaceToFirebase", data:facesCapture, email: currentEmail}, (response) => {
             facesCapture = [];
-			console.log("Save Student Face To Firebase Database")
+			Utils.log("Save Student Face To Firebase Database")
         });
     }
     else{
-        console.log("No Face Captured")
+        Utils.log("Error in Face Captured")
     }
 
 }
