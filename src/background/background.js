@@ -120,6 +120,28 @@ function checkSheetCode(programmeAvailable, sheetCode) {
     chrome.runtime.sendMessage(data);
 }
 
+function formatDate(d){
+    const weekday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    var day = weekday[d.getDay()];
+    var date = ('0' + d.getDate()).slice(-2);
+    var month = ('0' + d.getMonth()).slice(-2);
+    var year = ('0' + d.getFullYear()).slice(-4);
+
+    return day + ', ' + date + '-' + month + '-' + year;
+}
+
+function formatTime(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+    return strTime;
+}
+
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
 
@@ -152,11 +174,16 @@ chrome.extension.onMessage.addListener(
 
                 // To prevent model start will append data to Google Sheet
                 if (request.name !== undefined && request.gesture !== undefined) {
+                    const d = new Date();
+                    var date = formatDate(d);
+                    var time = formatTime(d);
+
                     const body = {
                         values: [[
                             request.username,
                             request.gesture,
-                            new Date().toString()
+                            date,
+                            time
                         ]]
                     };
 
