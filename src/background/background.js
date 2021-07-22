@@ -122,24 +122,26 @@ function checkSheetCode(programmeAvailable, sheetCode) {
 
 function formatDate(d){
     const weekday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var day = weekday[d.getDay()];
+    var day = weekday[d.getDay() - 1];
     var date = ('0' + d.getDate()).slice(-2);
-    var month = ('0' + d.getMonth()).slice(-2);
+    var month = ('0' + (d.getMonth() + 1)).slice(-2);
     var year = ('0' + d.getFullYear()).slice(-4);
 
     return day + ', ' + date + '-' + month + '-' + year;
 }
 
-function formatTime(date) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var seconds = date.getSeconds();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-    return strTime;
+function calculateInterval(currentTime, lastActiveTime){
+
+    var timeInterval = Math.abs(currentTime - lastActiveTime) / 1000;
+
+    // calculate minutes
+    var minutes = Math.floor(timeInterval / 60) % 60;
+    timeInterval -= minutes * 60;
+
+    // calculate seconds
+    var seconds = timeInterval % 60;
+
+    return  minutes + ':' + ('0' + Math.trunc(seconds)).slice(-2);
 }
 
 chrome.extension.onMessage.addListener(
@@ -162,7 +164,7 @@ chrome.extension.onMessage.addListener(
 
                     const programmeAvailable = (response.result.values);
                     programmeAvailable.shift(); // Remove title row in Sheet from the array
-                    console.log(programmeAvailable);
+                    // console.log(programmeAvailable);
 
                     checkSheetCode(programmeAvailable, request.code);
 
@@ -175,15 +177,20 @@ chrome.extension.onMessage.addListener(
                 // To prevent model start will append data to Google Sheet
                 if (request.name !== undefined && request.gesture !== undefined) {
                     const d = new Date();
-                    var date = formatDate(d);
-                    var time = formatTime(d);
+                    var currentDate = formatDate(d); // Use different format instead of toLocaleDateString()
+                    var currentTime = new Date();
+                    var lastActiveTime = new Date(request.lastActiveTime); 
+
+                    var interval = calculateInterval(currentTime, lastActiveTime);
 
                     const body = {
                         values: [[
                             request.username,
                             request.gesture,
-                            date,
-                            time
+                            currentDate,
+                            lastActiveTime.toLocaleTimeString(),
+                            currentTime.toLocaleTimeString(),
+                            interval
                         ]]
                     };
 

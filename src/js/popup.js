@@ -93,6 +93,8 @@ Remarks: Directly refresh chrome extension will cause system setup sheetCode val
 Recommended: Stop Model instead of directly refresh
 */
 chrome.storage.sync.get(['sheetCodeIsOn'], (result) => {
+    console.log(result.sheetCodeIsOn);
+
     if (result.sheetCodeIsOn !== null) {
         
         // To prevent system auto fill when user directly refresh extension instead stop the model
@@ -271,6 +273,9 @@ function setHandsfreeState(isStarted) {
         $el.status.classList.remove('label-error');
         $el.status.innerHTML = 'Started';
 
+        // Set last active Hand Timestamp
+        chrome.storage.sync.set({ "handActiveTimeStamp": new Date().toString()});
+
     } else {
         $el.start.classList.remove('d-none');
         $el.stop.classList.add('d-none');
@@ -278,6 +283,9 @@ function setHandsfreeState(isStarted) {
         $el.status.classList.remove('label-success');
         $el.status.classList.add('label-error');
         $el.status.innerHTML = 'Uninitialized';
+
+        // Clear last active Hand Timestamp
+        chrome.storage.sync.set({ "handActiveTimeStamp": null });
     }
 }
 

@@ -16,6 +16,7 @@ const handState = {
     chatbotText: null, // use to store message to put in Google Meet's Chatbox
     chatbotEnable: false, // use to determine whether send the chatbotText (Spacebar Key)
     handModuleIsOn: true, // whether start the hand gesture tracking and recognition module
+    handActiveTimeStamp: null, // use to store the last active hand timestamp for interval calculation
     handGesture: null, // store current hand gesture module (Number, Sign, Mouse)
     handStatusDrawing: null, // whether can draw hand landmark on the canvas
     previousGesture: null, // used to prevent gesture perfrom too many time
@@ -1963,6 +1964,7 @@ async function start() {
 
 async function loadhandState() {
     handState.handModuleIsOn = (await browser.storage.sync.get(["handModuleIsOn"])).handModuleIsOn;
+    handState.handActiveTimeStamp = (await browser.storage.sync.get(["handActiveTimeStamp"])).handActiveTimeStamp;
     handState.handGesture = (await browser.storage.sync.get(["handGesture"])).handGesture;
     handState.handStatusDrawing = (await browser.storage.sync.get(["handStatusDrawing"])).handStatusDrawing;
     handState.sheetCode = (await browser.storage.sync.get(["sheetCodeIsOn"])).sheetCodeIsOn;
@@ -1975,6 +1977,10 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
         if (key === "handModuleIsOn") {
             handState.handModuleIsOn = storageChange.newValue;
+
+        } else if (key === "handActiveTimeStamp") {
+            // Convert Date String to Date
+            handState.handActiveTimeStamp = storageChange.newValue;
 
         } else if (key === "handGesture") {
             handState.handGesture = storageChange.newValue;
@@ -2031,7 +2037,7 @@ function loadHandGesture() {
 // Change Gesture without refresh page
 // enable and disable gesture based on handState.handGesture
 function adjustHandGesture() {
-    
+
     if (handState.handGesture === "number") {
 
         // Number
@@ -2179,8 +2185,12 @@ function handGestureChatBox(gestureName) {
                         name: "meetAction",
                         username: handState.username,
                         gesture: gestureName,
-                        sheetID: handState.sheetCode.sheetID
+                        sheetID: handState.sheetCode.sheetID,
+                        lastActiveTime: handState.handActiveTimeStamp
                     }
+
+                    // Update last active timestamp
+                    chrome.storage.sync.set({ "handActiveTimeStamp": new Date().toString() });
 
                     chrome.runtime.sendMessage(data);
                 }
@@ -2205,7 +2215,7 @@ function handInRealTime() {
 
     let prevTime = Date.now(), frames = 0;
 
-    async function handPoseFrame() {
+    async function handFrame() {
 
         var ctx = handState.canvas.getContext("2d");
         ctx.clearRect(0, 0, handState.canvas.width, handState.canvas.height);
@@ -2314,10 +2324,10 @@ function handInRealTime() {
         }
 
         //Refresh
-        requestAnimationFrame(handPoseFrame);
+        requestAnimationFrame(handFrame);
     }
 
-    handPoseFrame();
+    handFrame();
 }
 
 start();
