@@ -269,6 +269,114 @@ function createHeaders(sheetId) {
     return requests
 }
 
+function createHandSheetHeaders(sheetId) {
+    const requests = [
+        {
+            updateCells: {
+                rows: [
+                    {
+                        values: [
+                            {
+                                userEnteredValue: {
+                                    stringValue: 'Username',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'LEFT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "The student's name.",
+                            },
+                            {
+                                userEnteredValue: {
+                                    stringValue: 'Hand Gesture',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'LEFT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "The student's hand gesture.",
+                            },
+                            {
+                                userEnteredValue: {
+                                    stringValue: 'Date',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'LEFT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "Event Date",
+                            },
+                            {
+                                userEnteredValue: {
+                                    stringValue: 'Last Active Time',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'RIGHT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "The student's last active time after previous gesture done.",
+                            },
+                            {
+                                userEnteredValue: {
+                                    stringValue: 'Gesture Time',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'RIGHT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "Time that student perform the hand gesture",
+                            },
+                            {
+                                userEnteredValue: {
+                                    stringValue: 'Time Interval',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'RIGHT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "Time Interval between Last Active Time and Gesture Time",
+                            },
+                        ],
+                    },
+                ],
+                fields: '*',
+                start: {
+                    sheetId: sheetId,
+                    rowIndex: 0,
+                    columnIndex: 0,
+                },
+            },
+        },
+        {
+            updateDimensionProperties: {
+                range: {
+                    sheetId: sheetId,
+                    dimension: "COLUMNS",
+                    startIndex: 0,
+                    endIndex: 6
+                },
+                properties: {
+                    pixelSize: 180
+                },
+                fields: "pixelSize"
+            },
+        },
+    ]
+    return requests
+}
+
 async function initializeCells(code, sheetId, attend) {
     sheetId = parseInt(sheetId)
     const color = {

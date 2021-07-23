@@ -85,7 +85,12 @@ function onGAPILoad() {
         discoveryDocs: DISCOVERY_DOCS,
 
     }).then(function () {
-        console.log('gapi initialized')
+        // Set service account token
+        gapi.auth.setToken({
+            'access_token': clientToken,
+        });
+
+        console.log('gapi initialized');
 
     }, function (error) {
         console.log('Error = ', error);
@@ -112,12 +117,62 @@ function checkSheetCode(programmeAvailable, sheetCode) {
             data.sheetCode = programmeAvailable[i][0];
             data.detail = programmeAvailable[i][1];
             data.sheetID = programmeAvailable[i][2];
+
+            // Create header for Sheet if Sheet empty
+            checkEmptySheet(data.sheetID);
+
             break;
         }
     }
 
     // Send data to popup.js to process
     chrome.runtime.sendMessage(data);
+}
+
+function checkEmptySheet(sheetID) {
+
+    gapi.client.sheets.spreadsheets.values.get({
+        spreadsheetId: sheetID,
+        range: 'Sheet1',
+    }).then(async function (response) {
+
+        if(response.result.values === undefined){
+            //Create header
+            let requests = []
+            requests = requests.concat(createHandSheetHeaders(0));
+            console.log(requests);
+    
+            const body = {
+                requests: requests,
+                includeSpreadsheetInResponse: true,
+            }
+
+            const init = {
+                method: 'POST',
+                async: true,
+                headers: {
+                    Authorization: 'Bearer ' + clientToken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            }
+
+            const response = await fetch(
+                `https://sheets.googleapis.com/v4/spreadsheets/1sRoB8cDP6Zi3jdmAYAyEpMStV3dGBu3FtW1KLPAKi78:batchUpdate`,
+                init
+            )
+            
+            if (response.ok) {
+                console.log('Successfully create Sheet\'s header!');
+            } else {
+                console.log('Fail to create Sheet\'s header! Please contact TARUC Management');
+            }
+
+        }
+
+    }, function (error) {
+        console.log('Error', error)
+    });
 }
 
 function formatDate(d){
@@ -134,6 +189,10 @@ function calculateInterval(currentTime, lastActiveTime){
 
     var timeInterval = Math.abs(currentTime - lastActiveTime) / 1000;
 
+    // calculate hours
+    const hours = Math.floor(timeInterval / 3600) % 24;
+    timeInterval -= hours * 3600;
+
     // calculate minutes
     var minutes = Math.floor(timeInterval / 60) % 60;
     timeInterval -= minutes * 60;
@@ -141,7 +200,7 @@ function calculateInterval(currentTime, lastActiveTime){
     // calculate seconds
     var seconds = timeInterval % 60;
 
-    return  minutes + ':' + ('0' + Math.trunc(seconds)).slice(-2);
+    return  hours + ':' + ('0' + Math.trunc(minutes)).slice(-2) + ':' + ('0' + Math.trunc(seconds)).slice(-2);
 }
 
 chrome.extension.onMessage.addListener(
@@ -149,10 +208,6 @@ chrome.extension.onMessage.addListener(
 
         // User need to authorize their own account first to use the service account
         chrome.identity.getAuthToken({ interactive: true }, function (token) {
-            // Set GAPI auth token (service account token)
-            gapi.auth.setToken({
-                'access_token': clientToken,
-            });
 
             if (request.name === 'sheetCode') {
                 gapi.client.sheets.spreadsheets.values.get({
@@ -176,6 +231,7 @@ chrome.extension.onMessage.addListener(
 
                 // To prevent model start will append data to Google Sheet
                 if (request.name !== undefined && request.gesture !== undefined) {
+
                     const d = new Date();
                     var currentDate = formatDate(d); // Use different format instead of toLocaleDateString()
                     var currentTime = new Date();
