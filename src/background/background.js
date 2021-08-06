@@ -242,6 +242,7 @@ chrome.extension.onMessage.addListener(
                     const body = {
                         values: [[
                             request.username,
+                            request.email,
                             request.gesture,
                             currentDate,
                             lastActiveTime.toLocaleTimeString(),

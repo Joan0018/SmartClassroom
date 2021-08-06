@@ -2184,6 +2184,7 @@ function handGestureChatBox(gestureName) {
                     var data = {
                         name: "meetAction",
                         username: handState.username,
+                        email: currentEmail,
                         gesture: gestureName,
                         sheetID: handState.sheetCode.sheetID,
                         lastActiveTime: handState.handActiveTimeStamp

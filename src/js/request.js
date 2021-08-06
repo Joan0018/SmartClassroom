@@ -290,6 +290,18 @@ function createHandSheetHeaders(sheetId) {
                             },
                             {
                                 userEnteredValue: {
+                                    stringValue: 'Email',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'LEFT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "The student's email.",
+                            },
+                            {
+                                userEnteredValue: {
                                     stringValue: 'Hand Gesture',
                                 },
                                 userEnteredFormat: {
@@ -305,7 +317,7 @@ function createHandSheetHeaders(sheetId) {
                                     stringValue: 'Date',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'LEFT',
+                                    horizontalAlignment: 'RIGHT',
                                     textFormat: {
                                         bold: true,
                                     },
@@ -365,7 +377,7 @@ function createHandSheetHeaders(sheetId) {
                     sheetId: sheetId,
                     dimension: "COLUMNS",
                     startIndex: 0,
-                    endIndex: 6
+                    endIndex: 7
                 },
                 properties: {
                     pixelSize: 180
