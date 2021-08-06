@@ -314,7 +314,7 @@ function createHandSheetHeaders(sheetId) {
                             },
                             {
                                 userEnteredValue: {
-                                    stringValue: 'Date',
+                                    stringValue: 'Date (Day, mm-dd-yyyy)',
                                 },
                                 userEnteredFormat: {
                                     horizontalAlignment: 'RIGHT',

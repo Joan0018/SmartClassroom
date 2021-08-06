@@ -182,7 +182,7 @@ function formatDate(d){
     var month = ('0' + (d.getMonth() + 1)).slice(-2);
     var year = ('0' + d.getFullYear()).slice(-4);
 
-    return day + ', ' + date + '-' + month + '-' + year;
+    return day + ', ' + month + '-' + date + '-' + year;
 }
 
 function calculateInterval(currentTime, lastActiveTime){
