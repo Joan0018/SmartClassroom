@@ -2148,12 +2148,12 @@ function handGestureAction(gestureName) {
 // Deal with Google Meet's Chatbox
 function handGestureChatBox(gestureName) {
     // Index 2 == meet chatbox
-    var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
+    var chatbox = document.querySelector('[aria-label="Chat with everyone"]');
 
-    if (meetTool.length != 0 && handState.username != null) {
-        var index = meetTool.length - 2; // Chatbox
-        if (meetTool[index].ariaPressed === "false") {
-            meetTool[index].click();
+    if (handState.username != null) {
+
+        if (chatbox.ariaPressed === "false") {
+            chatbox.click();
         }
 
         // Wait for Google Meet to open the Chat Box
@@ -2223,15 +2223,15 @@ function handInRealTime() {
         ctx.drawImage(handState.video, 0, 0);
 
         // Need to open Google Meet People Tool to get current username
-        var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
+        var people = document.querySelector('[aria-label="Show everyone"]');
 
         // Get Current username
-        if (meetTool.length != 0) {
+        if (people !== null && people !== undefined) {
 
             if (handState.username == null) {
-                var index = meetTool.length - 3; // People
-                if (meetTool[index].ariaPressed === "false") {
-                    meetTool[index].click();
+
+                if (people.ariaPressed === "false") {
+                    people.click();
 
                     var delayInMilliseconds = 500; //0.5 second
 
@@ -2242,7 +2242,7 @@ function handInRealTime() {
 
                             // Delay for 250 ms to let Google Meet able respond to this click()
                             setTimeout(function () {
-                                meetTool[index].click();
+                                people.click();
                             }, 250);
                         }
                     }, delayInMilliseconds);
