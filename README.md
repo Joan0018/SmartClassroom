@@ -9,7 +9,7 @@
   <h3 align="center">Smart Classroom Management System</h3>
   <h2 align="center">Final Year Project from Tunku Abdul Rahman University College (TARUC)
     <br/>
-    Bachelor of Computer Science (Honours) in Software Engineering (RSF) Students
+    Bachelor of Computer Science (Honours) in Software Engineering (RSF)
     <br/>
     Supervisor: Ts. TEW YIQI
     <br/>
