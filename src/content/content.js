@@ -8,6 +8,9 @@ const handsfree = new Handsfree({
     }
 })
 
+var totalConfidence = 0;
+var totalConfidenceCount = 0;
+
 const handState = {
     video: null,
     canvas: null,
@@ -2258,6 +2261,9 @@ function handInRealTime() {
                 if (handState.handStatusDrawing === 'start') {
                     if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
 
+                        totalConfidence += handsfree.data.hands.multiHandedness[0].score;
+                        totalConfidenceCount += 1;
+                        // console.log("Confidence: " + (handsfree.data.hands.multiHandedness[0].score * 100).toFixed(2) + "%");
                         const gesture = handsfree.model.hands.getGesture();
 
                         var handGesture;
@@ -2307,6 +2313,11 @@ function handInRealTime() {
 
                     } else {
                         handState.statusBox.innerHTML = "Finding Hands...";
+                        if (totalConfidence != 0) {
+                            // console.log("Total Confidence: " + totalConfidence);
+                            // console.log("Total Confidence Count: " + totalConfidenceCount);
+                            // console.log("Confidence: " + ((totalConfidence / totalConfidenceCount) * 100).toFixed(2));
+                        }
                     }
 
                     const time = Date.now();
@@ -2316,7 +2327,7 @@ function handInRealTime() {
                         prevTime = time;
                         frames = 0;
 
-                        console.info('FPS: ', fps);
+                        // console.info('FPS: ', fps);
                     }
                 } else {
                     handState.statusBox.innerHTML = "";
