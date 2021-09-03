@@ -2013,23 +2013,28 @@ function loadHandGesture() {
             handsfree.enablePlugins('browser');
 
             hands.pointer.forEach((pointer, hand) => {
-                if (pointer.isVisible && hands.pinchhandState[hand][0] === 'start') {
-                    const $el = document.elementFromPoint(pointer.x, pointer.y)
-                    if ($el) {
-                        $el.dispatchEvent(
-                            new MouseEvent('click', {
-                                bubbles: true,
-                                cancelable: true,
-                                clientX: pointer.x,
-                                clientY: pointer.y
-                            })
-                        )
-
-                        // Focus
-                        if (['INPUT', 'TEXTAREA', 'BUTTON', 'A'].includes($el.nodeName))
-                            $el.focus()
+                try{
+                    if (pointer.isVisible && hands.pinchState[hand][0] === 'start') {
+                        const $el = document.elementFromPoint(pointer.x, pointer.y)
+                        if ($el) {
+                            $el.dispatchEvent(
+                                new MouseEvent('click', {
+                                    bubbles: true,
+                                    cancelable: true,
+                                    clientX: pointer.x,
+                                    clientY: pointer.y
+                                })
+                            )
+    
+                            // Focus
+                            if (['INPUT', 'TEXTAREA', 'BUTTON', 'A'].includes($el.nodeName))
+                                $el.focus()
+                        }
                     }
+                }catch(e){
+                    // Just to prevent undefined error in console log
                 }
+                
             })
         })
     } else {
