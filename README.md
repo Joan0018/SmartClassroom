@@ -61,7 +61,7 @@
 
 <!-- ABOUT THE PROJECT -->
 <a id="about-the-project"><h2 style="display: inline-block">About The Project</h2></a>
-This is a **Final Year Project** carry out by **Bachelor of Computer Science (Honours) in Software Engineering (RSF)** Students in **TARUC**. It is a **Google Chrome Extension** which able to support management during **online class**. This project is design to allows students to take attendance through **facial recognition** and allows students to interacts with each others with **hand gesture**.
+A **Final Year Project** carries out by **Bachelor of Computer Science (Honours) in Software Engineering (RSF)** Students in **TARUC**. It is a Google Chrome Extension which able to support management during an online class. This project is designed to allow students to take attendance through **facial recognition** and interact with each other with **hand gestures**.
 <br />
 <br />
 #### :exclamation: :collision: This project is available, but it has not been officially released and is still immature :collision: :exclamation:   
@@ -92,16 +92,16 @@ Here's a blank template to get started:
 
 To get a local copy up and running follow these simple steps.
 
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
 ### Installation
 
+| Step        | Description   | 
+| :------------:|:-------------|
+| 1           | Download the Project Folder to Local Device |
+| 2           | Unzip the Project Folder |
+| 3           | Open Developer Mode in Google Chrome Extension |
+| 4           | Load Unpacked by Uploading the Project Folder to the Google Chrome Extension |
+
+### Installation Demo
 1. Clone the repo
    ```sh
    git clone https://github.com/github_username/repo_name.git
