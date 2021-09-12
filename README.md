@@ -92,24 +92,29 @@ Here's a blank template to get started:
 
 To get a local copy up and running follow these simple steps.
 
+### Prerequisites
+
+*Google Chrome Current Version: Version 93.0.4577.63 (Official Build) (64-bit)*
+
 ### Installation
 
 | Step        | Description   | 
 | :------------:|:-------------|
 | 1           | Download the Project Folder to Local Device |
 | 2           | Unzip the Project Folder |
-| 3           | Open Developer Mode in Google Chrome Extension |
+| 3           | Browse and Open Developer Mode in Google Chrome Extension |
 | 4           | Load Unpacked by Uploading the Project Folder to the Google Chrome Extension |
 
 ### Installation Demo
-1. Clone the repo
+1. Download the Project Folder to Local Device
+
+2. Unzip the Project Folder
+
+3. Browse and Open Developer Mode in Google Chrome Extension
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   chrome://extensions/
    ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
+5. Load Unpacked by Uploading the Project Folder to the Google Chrome Extension
 
 
 
