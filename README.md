@@ -42,16 +42,20 @@
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#get-start">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#installationDemo">Installation Demo</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#facial">Facial Detection and Recognition</a></li>
+        <li><a href="#hand">Hand Detection and Recognition</a></li>
+      </ul>
+    </li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgements">Acknowledgements</a></li>
   </ol>
@@ -88,15 +92,17 @@ Here's a blank template to get started:
 
 
 <!-- GETTING STARTED -->
-## Getting Started
+<a id="get-start"><h2 style="display: inline-block">Getting Started</h2></a>
 
 To get a local copy up and running follow these simple steps.
 
-### Prerequisites
+<!-- Prerequisites -->
+<a id="prerequisites"><h2 style="display: inline-block">Prerequisites</h2></a>
 
 *Google Chrome Current Version: Version 93.0.4577.63 (Official Build) (64-bit)*
 
-### Installation
+<!-- Installation -->
+<a id="installation"><h2 style="display: inline-block">Installation</h2></a>
 
 | Step        | Description   | 
 | :------------:|:-------------|
@@ -105,53 +111,43 @@ To get a local copy up and running follow these simple steps.
 | 3           | Browse and Open Developer Mode in Google Chrome Extension |
 | 4           | Load Unpacked by Uploading the Project Folder to the Google Chrome Extension |
 
-### Installation Demo
+<!-- Installation Demo-->
+<a id="installationDemo"><h2 style="display: inline-block">Installation Demo</h2></a>
+
 1. Download the Project Folder to Local Device
 
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Step_1.png)
+
 2. Unzip the Project Folder
+
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Step_2.png)
 
 3. Browse and Open Developer Mode in Google Chrome Extension
    ```sh
    chrome://extensions/
    ```
-5. Load Unpacked by Uploading the Project Folder to the Google Chrome Extension
+   
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Step_3.png)
+   
+4. Load Unpacked by Uploading the Project Folder to the Google Chrome Extension
+
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Step_4.png)
 
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+<a id="usage"><h2 style="display: inline-block">Usage</h2></a>
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+The usage of smart classroom chrome extension is discussed based on its module.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+<a id="facial"><h2 style="display: inline-block">Facial Detection and Recognition</h2></a>
 
+<a id="hand"><h2 style="display: inline-block">Hand Detection and Recognition</h2></a>
 
+<!-- Will update after FYP Report done -->
+_For more facial recognition examples, please refer to the [Documentation](https://example.com)_
 
-<!-- ROADMAP -->
-## Roadmap
-
-See the [open issues](https://github.com/github_username/repo_name/issues) for a list of proposed features (and known issues).
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information. 
-
+_For more hand recognition examples, please refer to the [Documentation](https://example.com)_
 
 
 <!-- CONTACT -->
@@ -162,13 +158,13 @@ Joan Hau - [@githubProfile](https://github.com/Joan0018)
 Lim Kah Yee - [@githubProfile](https://github.com/lky1020)
 
 Project Link: [@SmartClassroom](https://github.com/Joan0018/SmartClassroom) 
-<br/>
-Inividual Project Link: [@HandGesture](https://github.com/lky1020/Smart-Classroom---Handsfree)
 
 
 <!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
-
-* []()
-* []()
-* []()
+<a id="acknowledgements"><h2 style="display: inline-block">Acknowledgement</h2></a>
+_A Special Thanks To_
+* [Attendance for Google Meet™](https://chrome.google.com/webstore/detail/attendance-for-google-mee/gioogehddfnceeihfoeencjbhggblkkd)
+* [Google Meet Attendance & Engagement](https://chrome.google.com/webstore/detail/google-meet-attendance-en/dfoeddmkpdeheffinggbeggiebnhhmno)
+* [Google Meet Attendance Tracker](https://chrome.google.com/webstore/detail/google-meet-attendance-tr/ldjjokmalaidehbgbifihdfdondjgfha)
+* [MIDIBlocks](https://github.com/midiblocks/handsfree)
+* [MIDIBlocks-Chrome](https://github.com/MIDIBlocks/handsfree-chrome)
