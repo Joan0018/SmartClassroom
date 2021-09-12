@@ -6,7 +6,7 @@
     <img src="src/img/Attendance64.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Smart Classroom Management System</h3>
+  <h3 align="center">Virtual Classroom Management System</h3>
   <h2 align="center">Final Year Project from Tunku Abdul Rahman University College (TARUC)
     <br/>
     Bachelor of Computer Science (Honours) in Software Engineering (RSF)
@@ -16,7 +16,7 @@
     Contributors: JOAN HAU, LIM KAH YEE
   </h2>
   <p align="center">
-    This is a Smart Classroom Management System with 
+    This is a Virtual Classroom Management System with 
     <br />
     1. Face Landmark Detection and Face Recognition Attendance
     <br />
@@ -157,7 +157,7 @@ Joan Hau - [@githubProfile](https://github.com/Joan0018)
 <br/>
 Lim Kah Yee - [@githubProfile](https://github.com/lky1020)
 
-Project Link: [@SmartClassroom](https://github.com/Joan0018/SmartClassroom) 
+Project Link: [@VirtualClassroom](https://github.com/Joan0018/SmartClassroom) 
 
 
 <!-- ACKNOWLEDGEMENTS -->
