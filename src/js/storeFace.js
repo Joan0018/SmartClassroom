@@ -105,7 +105,7 @@ function addFaceCaptured(){
 
 			if(malePredict.length > femalePredict.length){
 				facesCapture.push({
-					'name': studName,
+					'name': studName.toUpperCase(),
 					'id': studID,
 					'gender': "Male",
 					'face': studFace
@@ -113,7 +113,7 @@ function addFaceCaptured(){
 			}
 			else if(femalePredict.length > malePredict.length){
 				facesCapture.push({
-					'name': studName,
+					'name': studName.toUpperCase(),
 					'id': studID,
 					'gender': "Female",
 					'face': studFace

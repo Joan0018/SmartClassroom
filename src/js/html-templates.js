@@ -17,12 +17,12 @@
      <div class="separator"></div>
      <div style="display: flex; flex-direction: row; align-items: center; margin: 0 0.5em;">
          <p class="input-name-student-name"> Name </p>
-         <input class="student-name"/> 
+         <input placeholder="Student Name"  class="student-name" /> 
      </div>
 
      <div style="display: flex; flex-direction: row; align-items: center; margin: 0 0.5em;">
          <p class="input-name-student-id"> Student ID </p>
-         <input class="student-id"/>
+         <input class="student-id" placeholder="Student ID"/>
      </div>
 
      <p class="student-names" style="width: auto;"> Please put your face in front of camera </p>
