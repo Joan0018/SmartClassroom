@@ -173,7 +173,7 @@ function storeFaceCaptured(){
 
 }
 
-//To Validate the user Input for Student anme and Student ID
+//To Validate the user Input for Student name and Student ID
 function checkValidity(){
 
 	const studIDKey = /^[0-9]{2}[A-Z]{3}[0-9]{5}?$/; //True consider correct format

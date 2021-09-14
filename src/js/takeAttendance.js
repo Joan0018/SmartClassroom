@@ -90,9 +90,11 @@ function saveAttendance(){
     
         studentList = [];
         labels = [];
+    }else{
+        alert("Sorry, there is an error occured. Please try again");
     }
 
-    alert("Sorry, there is an error occured. Please try again");
+
 
 }
 

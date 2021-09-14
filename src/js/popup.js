@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		if (!tabs[0].url.match(/https:\/\/meet.google.com\/.+-.+-.+/)) return;
-
 		document.querySelector('.popup-face-register').addEventListener('click', function() {
-			chrome.tabs.sendMessage(tabs[0].id, {data: 'register-face'});
-			window.close();
-		}, false);
+            chrome.tabs.sendMessage(tabs[0].id, {data: 'register-face'});
+            window.close();
+        }, false);
 		document.querySelector('.popup-take-attendance').addEventListener('click', function() {
 			chrome.tabs.sendMessage(tabs[0].id, {data: 'take-attendance'});
 			window.close();
@@ -36,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
 }, false)
 
 function updatePopup(currentLang) {
-	console.log(currentLang);
 	document.querySelector('.popup-lang').innerText = meetLanguage[currentLang]['popup']['popup_lang'];
 	document.querySelector('.popup-face-register').innerText = meetLanguage[currentLang]['popup']['popup_face_register'];
 	document.querySelector('.popup-take-attendance').innerText = meetLanguage[currentLang]['popup']['popup_take_attendance'];
@@ -233,7 +231,7 @@ $el.start.addEventListener('click', () => {
 
             txtInfo.innerHTML = 'Connecting...';
 
-            // Sned message to background to check whether sheet code is valid
+            // Send message to background to check whether sheet code is valid
             var data = {
                 name: 'sheetCode',
                 code: sheetID.value,
@@ -247,7 +245,6 @@ $el.start.addEventListener('click', () => {
     } else {
         txtInfo.innerHTML = 'Please Enter Sheet Code!';
     }
-
 })
 
 /**
@@ -292,3 +289,5 @@ function setHandsfreeState(isStarted) {
 chrome.storage.local.get(['isHandsfreeStarted'], function (data) {
     setHandsfreeState(data.isHandsfreeStarted)
 })
+
+

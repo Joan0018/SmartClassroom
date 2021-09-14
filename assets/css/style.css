@@ -412,7 +412,7 @@
     font-weight: 500;
     line-height: 1rem;
     text-transform: uppercase;
-    color: #5f6368 !important;
+    color: red !important;
     margin: 4px 0;
     padding: 8px 24px;
 }
@@ -773,4 +773,21 @@
 
 .mdc-notched-outline {
     z-index: 3 !important;
+}
+
+.mdc-text-field--textarea .mdc-text-field__input,
+.highlighter {
+    line-height: 40px;
+    font-size: 12px;
+    font-family: 'Bruh Mono', Menlo, Courier, monospace;
+    letter-spacing: normal;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+}
+
+.mdc-text-field--textarea .mdc-text-field__input {
+    z-index: 1;
+}
+.mdc-text-field--textarea .mdc-text-field__input::selection {
+    background-color: black;
 }

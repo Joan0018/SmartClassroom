@@ -20,13 +20,12 @@ function updateSheetProperties(className, code, sheetId, fields) {
     return requests
 }
 
-function addSheet(className, code, sheetId) {
+function addSheet(sheetName) {
     const requests = [
         {
             addSheet: {
                 properties: {
-                    sheetId: sheetId,
-                    title: className,
+                    title: sheetName,
                     gridProperties: {
                         rowCount: 2,
                         columnCount: 7,
@@ -36,7 +35,7 @@ function addSheet(className, code, sheetId) {
             },
         },
     ]
-    requests.push(createSheetMetadata(className, sheetId))
+    // requests.push(createSheetMetadata(className, sheetId))
     return requests
 }
 
@@ -290,18 +289,6 @@ function createHandSheetHeaders(sheetId) {
                             },
                             {
                                 userEnteredValue: {
-                                    stringValue: 'Email',
-                                },
-                                userEnteredFormat: {
-                                    horizontalAlignment: 'LEFT',
-                                    textFormat: {
-                                        bold: true,
-                                    },
-                                },
-                                note: "The student's email.",
-                            },
-                            {
-                                userEnteredValue: {
                                     stringValue: 'Hand Gesture',
                                 },
                                 userEnteredFormat: {
@@ -314,10 +301,10 @@ function createHandSheetHeaders(sheetId) {
                             },
                             {
                                 userEnteredValue: {
-                                    stringValue: 'Date (Day, mm-dd-yyyy)',
+                                    stringValue: 'Date',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'RIGHT',
+                                    horizontalAlignment: 'LEFT',
                                     textFormat: {
                                         bold: true,
                                     },
@@ -377,7 +364,7 @@ function createHandSheetHeaders(sheetId) {
                     sheetId: sheetId,
                     dimension: "COLUMNS",
                     startIndex: 0,
-                    endIndex: 7
+                    endIndex: 6
                 },
                 properties: {
                     pixelSize: 180
@@ -457,7 +444,7 @@ async function initializeCells(code, sheetId, attend) {
     return requests
 }
 
-async function updateCells(token, code, spreadsheetId, sheetId, startRow) {
+async function updateCells(token, code, spreadsheetId, sheetId, startRow, attend) {
     sheetId = parseInt(sheetId)
     const color = {
         red: 0.75,
@@ -473,7 +460,7 @@ async function updateCells(token, code, spreadsheetId, sheetId, startRow) {
         sheetId,
         startRow
     )
-    const rows = await generateAttendanceRows(code)
+    const rows = await generateAttendanceRows(code, attend)
     requests.push({
         deleteDimensionGroup: {
             range: {
@@ -893,6 +880,7 @@ function getSpreadsheetTheme() {
 }
 
 async function getMetaByKey(key, token, spreadsheetId) {
+    
     const init = {
         method: 'GET',
         async: true,
@@ -902,9 +890,7 @@ async function getMetaByKey(key, token, spreadsheetId) {
         },
     }
     const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/developerMetadata/${Utils.hashCode(
-            key
-        )}`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/developerMetadata/${Utils.hashCode(`${key}`)}`,
         init
     )
     if (response.ok || response.status === 404) {
@@ -983,12 +969,13 @@ async function batchUpdate(token, requests, spreadsheetId, sheetId = -1) {
         init
     )
     const data = await response.json()
+    console.log(data);
     if (response.ok) {
         return data
     } else {
-        console.log(data)
-        throw new Error(
-            'An error occurred while updating the spreadsheet. Please try again later.'
-        )
+        return null;
+        // throw new Error(
+        //     'An error occurred while updating the spreadsheet. Please try again later.'
+        // )
     }
 }

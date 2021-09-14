@@ -2,7 +2,14 @@
  * To get the current google meet joined user's email
  */
 const currentEmail = document.getElementsByClassName("Duq0Bf")[0].innerHTML;
+
 /**
+ * Initialize variables needed for attendance tracker
+ */
+ var studentsNameSet = [];
+ let studentCurrentAttend = getStudentAttendDetail();
+
+ /**
  * Initialize when meeting starts
  * Check whether the google meet start
  * Get the start time when google meet start
@@ -130,7 +137,9 @@ function initialize() {
                             panelSpawnedObserver.observe(panelContainer, {
                                 childList: true,
                             })
+                            attendanceTracker();
                         } else {
+                            attendanceTracker();
                             panelUnhiddenObserver.observe(
                                 document.querySelector('[data-tab-id="5"]'),
                                 {
@@ -159,11 +168,32 @@ function initialize() {
 
                 const exportButton = document.getElementById('export')
                 exportButton.addEventListener('click', () => {
-                    var code = getMeetCode();
-                    chrome.runtime.sendMessage({
-                        command: 'RetrieveStudentAttend',
-                        data: code
-                    })
+                    const sheetCode = document.getElementsByClassName("mdc-text-field__input")[0].value
+                    const msg = document.getElementById("errMsg");
+                    if(sheetCode !== ""){
+                        if(/^\d{6}$/.test(sheetCode)){
+                            chrome.runtime.sendMessage({command: "checkSheetCode", data:sheetCode}, (response) => {
+                                msg.innerHTML = "connecting...";
+                                Utils.log("Check and Assign Spreadsheet ID");
+                                var code = getMeetCode();
+                                chrome.runtime.sendMessage({
+                                    command: 'RetrieveStudentAttend',
+                                    data: code,
+                                    sheet: response.response,
+                                    meetCode: getMeetCode(),
+                                    currentTime: getCurrentTime()
+                                })
+                                
+                            });
+                            msg.innerHTML = "invalid sheet code...";
+                        }
+                        else{
+                            msg.innerHTML = "6-digits Sheet Code Required";
+                        }
+                    }
+                    else{
+                        msg.innerHTML = "Please Enter the Sheet Code";
+                    }
                 })
 
                 initializePanel();
@@ -214,6 +244,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             break;
         }
         case 'register-face': {
+             /**
+             * Assume the student name entered in follow the google meet registered name
+             */
             alert("Please Enter Full Name and Student ID as Registered \nFormat of Input: \r\nName: XXXX XXXX XXXX \r\nStudent ID: XXWMRXXXXX \r\nClick the take photo button once you are ready")
             document.getElementById('registerFaceCard').style.visibility = 'visible';
             break;
@@ -280,12 +313,10 @@ function getMeetCode() {
 function wait4Meet2End(){
     // wait until the meeting is done
     waitForElement( '[data-call-ended="true"]',function(){
-        try { 
-            var currentTime = new Date().toLocaleTimeString();
-            chrome.runtime.sendMessage({command: 'user-leave', type: getMeetCode(), active: attendedStud, data:currentTime});
-        } catch (e) {}
-        
-    } )
+        var currentTime = new Date().toLocaleTimeString();
+        studentsNameSet = [];
+        chrome.runtime.sendMessage({command: 'user-leave', type: getMeetCode(), active: attendedStud, data:currentTime});
+    });
 }
 
 /**
@@ -297,7 +328,7 @@ function waitForElement(elementPath, callBack){
     let waitfor = elementPath === '[data-call-ended = "true"]' ? 10000 : 2500
     
     window.setTimeout( function(){
-        let itExists = document.querySelector( elementPath )
+        let itExists = document.querySelector(elementPath)
         if( !itExists || itExists.length === 0 ) {
             waitForElement( elementPath, callBack );
         }
@@ -305,4 +336,89 @@ function waitForElement(elementPath, callBack){
             callBack( elementPath, itExists );
         }
     }, waitfor )
+}
+
+function getStudentAttendDetail(){
+    var code = getMeetCode();
+    let studentList = [];
+    chrome.runtime.sendMessage({command: "RetrieveStudentAttdDetail", data:code}, (response) => {
+        Utils.log("Retrieve Student Attedance List From Firebase Database")
+        if (response.response.length > 0){
+            for(let i = 0; i < response.response.length; i++){
+                studentList.push({
+                    'name': response.response[i].name.toUpperCase(),
+                    'time': response.response[i].time
+                })
+            }
+        }
+    });
+
+    return studentList;
+}
+
+/**Tracker all the participant in the class */
+/**
+ * **Need to add student join table in firebase database 3 Aug 2021 comment
+ */
+function attendanceTracker(){
+  
+    let currentlyPresentStudents = document.getElementsByClassName("ZjFb7c");
+    
+    for(i=0; i<currentlyPresentStudents.length; i++){
+        if(!studentsNameSet.includes(currentlyPresentStudents[i].innerHTML.toUpperCase())){
+            studentsNameSet.push(currentlyPresentStudents[i].innerHTML.toUpperCase());
+            checkCurrentList(currentlyPresentStudents,i)
+        }
+    }
+    
+}
+
+function checkCurrentList(currentlyPresentStudents,i){
+    let entry;
+    entry = [];
+
+    for(j = 0; j < studentCurrentAttend.length; j++){
+        if(studentCurrentAttend[j].name === currentlyPresentStudents[i].innerHTML.toUpperCase()){
+            let rosterStatusEl = document.getElementById('roster-status');
+            entry.push({
+                name: currentlyPresentStudents[i].innerHTML.toUpperCase(),
+                color: 'green',
+                tooltip: 'Present',
+                text: `Joined at ${studentCurrentAttend[j].time}`,
+            })
+            const entryEl = initializeStudentElement(entry[0])
+            rosterStatusEl.appendChild(entryEl)
+        }
+        else{
+            let rosterStatusEl = document.getElementById('roster-status');
+            entry.push({
+                name: currentlyPresentStudents[i].innerHTML.toUpperCase(),
+                color: 'red',
+                tooltip: 'Absent',
+                text: `No Attendance Taken`,
+            })
+            const entryEl = initializeStudentElement(entry[0])
+            rosterStatusEl.appendChild(entryEl)
+        }
+    }
+}
+
+/**
+ * Initializes a student list item element to append to the student list.
+ * @param {Object} entry - The details of the student's attendance status.
+ * @param {string} entry.name - The student's name.
+ * @param {string} entry.color - The color of the status icon.
+ * @param {string} entry.text - The secondary text below the student's name.
+ * @returns {HTMLElement} The student list item element.
+ */
+ function initializeStudentElement(entry) {
+    const studentTemplate = document.getElementById('student-template')
+    const entryEl = studentTemplate.content.cloneNode(true)
+    const statusIcon = entryEl.querySelector('.mdc-list-item__graphic')
+    statusIcon.classList.add(entry.color)
+    statusIcon.setAttribute('aria-label', entry.tooltip)
+    statusIcon.setAttribute('data-tooltip', entry.tooltip)
+    entryEl.querySelector('.mdc-list-item__primary-text').textContent = entry.name
+    entryEl.querySelector('.mdc-list-item__secondary-text').textContent = entry.text
+    return entryEl
 }

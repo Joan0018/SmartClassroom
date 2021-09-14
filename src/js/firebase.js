@@ -1,7 +1,7 @@
 /**
  * Chrome Extension Firebase Configuration
  */
-var firebaseConfig = {
+ var firebaseConfig = {
     apiKey: "AIzaSyCFe9RV9CHaR-yqzCwe65K8K8iQKxozLNY",
     authDomain: "smartclassroomjs.firebaseapp.com",
     projectId: "smartclassroomjs",
@@ -36,9 +36,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    
-    switch(request.command) {
 
+    switch(request.command) {
+        
         case "saveFaceToFirebase": {
             chrome.identity.getAuthToken({'interactive': true}, function(token) {
                     if(request.data.length > 0) {
@@ -108,11 +108,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             return true;
         }
         case "SaveStudentAttendance":{
-
             var curData = request.data
             var fields = curData.split('-')
             var studID = fields[0];
-            var studName = fields[1];
+            var studName = fields[1].toUpperCase();
             const attend = firebase.database().ref('AttendedStudent/' + request.type + '/' + request.data);
 
             chrome.storage.sync.get(['start'], function(result) {
@@ -125,8 +124,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     EndTime: ""
                 });
             });
-
-
         }
         case "RetrieveStudentAttend":{
             chrome.identity.getAuthToken({ interactive: true }, (token) => {
@@ -143,7 +140,52 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                   }, (errorObject) => {
                     console.log('The read failed: ' + errorObject.name);
                 }); 
-                createSpreadsheet(token, request.data,attedList)
+                
+                createSpreadsheet(clientToken, request.data,attedList, request.sheet, request.meetCode, request.currentTime)
+
+            })
+        }
+        case "RetrieveStudentAttdDetail":{
+            var attedListDetail = [];
+            firebase.database().ref('AttendedStudent/' + request.data).on('value', (snapshot) => {
+                snapshot.forEach(function(childSnapshot) {
+                    attedListDetail.push({
+                        'name': childSnapshot.val().Name,
+                        'time': childSnapshot.val().StartTime
+                    })
+                });
+                sendResponse({
+                    response: attedListDetail
+                });
+
+                }, (errorObject) => {
+                    console.log('The read failed: ' + errorObject.name);
+            }); 
+        }
+        case "checkSheetCode":{
+            chrome.identity.getAuthToken({ interactive: true }, (token) => {
+                gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: MANAGEMENT_SPREADSHEET_ID,
+                    range: MANAGEMENT_SPREADSHEET_TAB_NAME,
+                }).then(function (response) {
+
+                    Utils.log(`Got ${response.result.values.length} rows back`);
+
+                    const programmeAvailable = (response.result.values);
+                    programmeAvailable.shift(); // Remove title row in Sheet from the array
+
+                    for (let i = 0; i < programmeAvailable.length; i++) {
+                        if (request.data === programmeAvailable[i][0]) {
+                            sendResponse({
+                                response: programmeAvailable[i][2]
+                            });
+                            break;
+                        }
+                    }
+                    
+                }, function (error) {
+                    console.log('Error', error)
+                });
             })
         }
         case "user-leave":{
@@ -154,7 +196,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                 })
             }
 
-        }
+        } 
     }
 });
 
@@ -194,7 +236,7 @@ function refreshToken(token, callback) {
  * @param {String} code - Current Meeting Code
  * @param {String} attend - String array which store the current student Attend
  */
-async function createSpreadsheet(token, code, attend) {
+ async function createSpreadsheet(token, code, attend, sheet, meetCode, currentTime) {
     if(attend.length > 0){
         const body = {
             properties: {
@@ -211,41 +253,179 @@ async function createSpreadsheet(token, code, attend) {
             },
             body: JSON.stringify(body),
         }
-        let spreadsheetId = null
+        let spreadsheetId = sheet;
+        let sheetId = 0;
         let requests = []
-        console.log("Creating new attendance spreadsheet...")
         // const notifierKey = `${className}-${code}`
         // if (!notifierMap.has(notifierKey)) {
         //     notifierMap.set(notifierKey, new Notifier(className, code))
         // }
         // const notifier = notifierMap.get(notifierKey)
         // notifier.post(port, { progress: 0 })
-        const newSpreadsheet = await (
-            await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
-        ).json()
-        if (newSpreadsheet.spreadsheetId == undefined) {
-            throw newSpreadsheet.error
-        }
-        console.log(
-            `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
-        )
-        chrome.storage.local.set({
-            'spreadsheet-id': newSpreadsheet.spreadsheetId,
-        })
-        spreadsheetId = newSpreadsheet.spreadsheetId
+        // const newSpreadsheet = await (
+        //     await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
+        // ).json()
+        // if (newSpreadsheet.spreadsheetId == undefined) {
+        //     throw newSpreadsheet.error
+        // }
+        // console.log(
+        //     `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
+        // )
+        // chrome.storage.local.set({
+        //     'spreadsheet-id': newSpreadsheet.spreadsheetId,
+        // })
+        // spreadsheetId = newSpreadsheet.spreadsheetId
         //requests = requests.concat(updateSheetProperties(className, code, 0, '*'))
-        requests = requests.concat(createHeaders(0))
-        const icReqs = await initializeCells(code, 0,attend)
+        requests = requests.concat(createHeaders(sheetId))
+        const icReqs = await initializeCells(code, sheetId,attend)
         //notifier.post(port, { progress: 0.6 })
         requests = requests.concat(icReqs)
-        Utils.log(token)
-        console.log(requests)
-        Utils.log(spreadsheetId)
-        const data = await batchUpdate(token, requests, spreadsheetId, 0)
+        const data = await batchUpdate(token, requests, spreadsheetId, sheetId)
         //notifier.post(port, { done: true, progress: 1 })
         //notifierMap.delete(notifierKey)
         console.log('Initialize spreadsheet response:')
         console.log(data)
+        if(data == null){
+            updateSpreadsheet(token, code, attend, sheet, meetCode, currentTime)
+        }
+
     }
     
 }
+
+async function updateSpreadsheet(token, code, attend, spreadsheetId, meetCode, currentTime) {
+    let requests = [];
+    let sheetName = `${meetCode}§${new Date().toLocaleTimeString()}`;
+    Utils.log('Updating spreadsheet...')
+
+        let sheetId
+        const spreadsheet = await getSpreadsheet(token, spreadsheetId)
+        sheetId = 
+            spreadsheet.sheets.reduce(
+                (acc, sheet) => Math.max(acc, sheet.properties.sheetId),
+                0
+            ) + 1
+        requests = requests.concat(addSheet(sheetName))
+        // requests = requests.concat(createHeaders(sheetId))
+        Utils.log(`Creating new sheet for class ${code}, ID ${sheetId}`)
+
+    let data = await batchUpdate(token, requests, spreadsheetId, 0);
+
+    let spreadsheetProperties = data.updatedSpreadsheet.sheets;
+    let maxlength = data.updatedSpreadsheet.sheets.length
+    let sheetID = spreadsheetProperties[maxlength - 1].properties.sheetId;
+
+    editSpreadSheet(token, code, attend, spreadsheetId, sheetID);
+}
+
+async function editSpreadSheet(token, code, attend, sheet, sheetId){
+
+    if(attend.length > 0){
+        const body = {
+            properties: {
+                title: 'Google Meet Facial Attendance',
+                spreadsheetTheme: getSpreadsheetTheme(),
+            },
+        }
+        const init = {
+            method: 'POST',
+            async: true,
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        }
+        let spreadsheetId = sheet;
+        let requests = []
+        // const notifierKey = `${className}-${code}`
+        // if (!notifierMap.has(notifierKey)) {
+        //     notifierMap.set(notifierKey, new Notifier(className, code))
+        // }
+        // const notifier = notifierMap.get(notifierKey)
+        // notifier.post(port, { progress: 0 })
+        // const newSpreadsheet = await (
+        //     await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
+        // ).json()
+        // if (newSpreadsheet.spreadsheetId == undefined) {
+        //     throw newSpreadsheet.error
+        // }
+        // console.log(
+        //     `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
+        // )
+        // chrome.storage.local.set({
+        //     'spreadsheet-id': newSpreadsheet.spreadsheetId,
+        // })
+        // spreadsheetId = newSpreadsheet.spreadsheetId
+        //requests = requests.concat(updateSheetProperties(className, code, 0, '*'))
+        requests = requests.concat(createHeaders(sheetId))
+        const icReqs = await initializeCells(code, sheetId,attend)
+        //notifier.post(port, { progress: 0.6 })
+        requests = requests.concat(icReqs)
+        const data = await batchUpdate(token, requests, spreadsheetId, sheetId)
+        //notifier.post(port, { done: true, progress: 1 })
+        //notifierMap.delete(notifierKey)
+        console.log('Initialize spreadsheet response:')
+        console.log(data)
+        if(data == null){
+            console.log("null");
+        }
+
+    }
+}
+
+// async function updateSpreadsheet(token, className, code, spreadsheetId, port) {
+//     let requests = []
+//     Utils.log('Updating spreadsheet...')
+
+//     // const notifierKey = `${className}-${code}`
+//     // if (!notifierMap.has(notifierKey)) {
+//     //     notifierMap.set(notifierKey, new Notifier(className, code))
+//     // }
+//     // const notifier = notifierMap.get(notifierKey)
+//     // notifier.post(port, { progress: 0 })
+//     const classMeta = await getMetaByKey(className, token, spreadsheetId)
+//     // notifier.post(port, { progress: 0.15 })
+
+//     let sheetId
+//     if (classMeta == null) {
+//         const spreadsheet = await getSpreadsheet(token, spreadsheetId)
+//         sheetId =
+//             spreadsheet.sheets.reduce(
+//                 (acc, sheet) => Math.max(acc, sheet.properties.sheetId),
+//                 0
+//             ) + 1
+//         requests = requests.concat(addSheet(className, code, sheetId))
+//         requests = requests.concat(createHeaders(sheetId))
+//         Utils.log(`Creating new sheet for class ${className}, ID ${sheetId}`)
+//     } else {
+//         sheetId = classMeta.location.sheetId
+//     }
+//     const codeMeta = await getMetaByKey(
+//         `${code}§${sheetId}`,
+//         token,
+//         spreadsheetId
+//     )
+//     notifier.post(port, { progress: 0.3 })
+//     const startRow =
+//         codeMeta == null ? 1 : codeMeta.location.dimensionRange.startIndex
+//     const icReqs =
+//         codeMeta == null
+//             ? await initializeCells(code, sheetId)
+//             : await updateCells(token, code, spreadsheetId, sheetId, startRow)
+//     notifier.post(port, { progress: 0.4 })
+//     requests = requests.concat(icReqs)
+//     let data = await batchUpdate(token, requests, spreadsheetId, sheetId)
+//     notifier.post(port, { progress: 0.65 })
+//     Utils.log('Update spreadsheet response:')
+//     console.log(data)
+//     const cgReqs = await collapseGroup(token, code, spreadsheetId, sheetId)
+//     notifier.post(port, { progress: 0.75 })
+//     if (cgReqs) {
+//         data = await batchUpdate(token, cgReqs, spreadsheetId, sheetId)
+//         Utils.log('Update metadata and groups response:')
+//         console.log(data)
+//     }
+//     notifier.post(port, { done: true, progress: 1 })
+//     notifierMap.delete(notifierKey)
+// }
