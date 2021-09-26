@@ -2,7 +2,6 @@
  * To get the current google meet joined user's email
  */
 const currentEmail = document.getElementsByClassName("Duq0Bf")[0].innerHTML;
-
 /**
  * Initialize variables needed for attendance tracker
  */
@@ -139,6 +138,7 @@ function initialize() {
                             })
                             attendanceTracker();
                         } else {
+                            
                             attendanceTracker();
                             panelUnhiddenObserver.observe(
                                 document.querySelector('[data-tab-id="5"]'),
@@ -361,20 +361,29 @@ function getStudentAttendDetail(){
  * **Need to add student join table in firebase database 3 Aug 2021 comment
  */
 function attendanceTracker(){
-  
-    let currentlyPresentStudents = document.getElementsByClassName("ZjFb7c");
-    
-    for(i=0; i<currentlyPresentStudents.length; i++){
-        if(!studentsNameSet.includes(currentlyPresentStudents[i].innerHTML.toUpperCase())){
-            studentsNameSet.push(currentlyPresentStudents[i].innerHTML.toUpperCase());
-            checkCurrentList(currentlyPresentStudents,i)
+    let rosterStatusEl = document.getElementById('roster-status');
+    for (let i = 0 ; i < rosterStatusEl.childElementCount; i++){
+        if(rosterStatusEl.children[i].className == "mdc-list-item"){
+            rosterStatusEl.removeChild(rosterStatusEl.children[i]);
         }
     }
+
+    for (let i = 0 ; i < rosterStatusEl.childElementCount; i++){
+        if(rosterStatusEl.children[i].className == "mdc-list-divider"){
+            rosterStatusEl.removeChild(rosterStatusEl.children[i]);
+        }
+    }
+
+    let currentlyPresentStudents = document.getElementsByClassName("ZjFb7c");
     
+    for(let i=0; i<currentlyPresentStudents.length; i++){
+        checkCurrentList(currentlyPresentStudents,i);
+    }
 }
 
 function checkCurrentList(currentlyPresentStudents,i){
     let entry;
+    let index = 0;
     entry = [];
 
     for(j = 0; j < studentCurrentAttend.length; j++){
@@ -388,19 +397,22 @@ function checkCurrentList(currentlyPresentStudents,i){
             })
             const entryEl = initializeStudentElement(entry[0])
             rosterStatusEl.appendChild(entryEl)
-        }
-        else{
-            let rosterStatusEl = document.getElementById('roster-status');
-            entry.push({
-                name: currentlyPresentStudents[i].innerHTML.toUpperCase(),
-                color: 'red',
-                tooltip: 'Absent',
-                text: `No Attendance Taken`,
-            })
-            const entryEl = initializeStudentElement(entry[0])
-            rosterStatusEl.appendChild(entryEl)
+            index = -1;
         }
     }
+
+    if(index != -1 ){
+        let rosterStatusEl = document.getElementById('roster-status');
+        entry.push({
+            name: currentlyPresentStudents[i].innerHTML.toUpperCase(),
+            color: 'red',
+            tooltip: 'Absent',
+            text: `No Attendance Taken`,
+        })
+        const entryEl = initializeStudentElement(entry[0])
+        rosterStatusEl.appendChild(entryEl);
+    }
+ 
 }
 
 /**
