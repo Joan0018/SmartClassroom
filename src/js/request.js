@@ -376,6 +376,28 @@ function createHandSheetHeaders(sheetId) {
     return requests
 }
 
+function AddASheet(sheetName){
+    const requests = [
+        {
+            addSheet: {
+                properties: {
+                  title: sheetName,
+                  gridProperties: {
+                    rowCount: 25,
+                    columnCount: 26
+                  },
+                  tabColor: {
+                    red: 1.0,
+                    green: 1.0,
+                    blue: 1.0
+                  }
+                }
+            }
+        },
+    ]
+    return requests
+}
+
 async function initializeCells(code, sheetId, attend) {
     sheetId = parseInt(sheetId)
     const color = {

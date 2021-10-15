@@ -120,6 +120,7 @@ function checkSheetCode(programmeAvailable, sheetCode) {
 
             // Create header for Sheet if Sheet empty
             checkEmptySheet(data.sheetID);
+            // checkSheetTab(data.sheetID);
 
             break;
         }
@@ -158,7 +159,7 @@ function checkEmptySheet(sheetID) {
             }
 
             const response = await fetch(
-                `https://sheets.googleapis.com/v4/spreadsheets/1sRoB8cDP6Zi3jdmAYAyEpMStV3dGBu3FtW1KLPAKi78:batchUpdate`,
+                `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}:batchUpdate`,
                 init
             )
             
@@ -173,6 +174,39 @@ function checkEmptySheet(sheetID) {
     }, function (error) {
         console.log('Error', error)
     });
+}
+
+async function checkSheetTab(sheetID) {
+
+    let requests = []
+    requests = requests.concat(AddASheet("sheetName"));
+    console.log(requests);
+
+    const body = {
+        requests: requests,
+        includeSpreadsheetInResponse: true,
+    }
+
+    const init = {
+        method: 'POST',
+        async: true,
+        headers: {
+            Authorization: 'Bearer ' + clientToken,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    }
+
+    const response = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}:batchUpdate`,
+        init
+    )
+    
+    if (response.ok) {
+        console.log('Successfully create new Sheet!');
+    } else {
+        console.log('Fail to create new Sheet!');
+    }
 }
 
 function formatDate(d){
