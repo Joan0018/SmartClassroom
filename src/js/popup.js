@@ -232,11 +232,15 @@ $el.start.addEventListener('click', () => {
             txtInfo.innerHTML = 'Connecting...';
 
             // Send message to background to check whether sheet code is valid
-            var data = {
-                name: 'sheetCode',
-                code: sheetID.value,
-            }
-            chrome.runtime.sendMessage(data);
+            chrome.storage.sync.get(['meetName'], (result) => {
+                var data = {
+                    name: 'sheetCode',
+                    code: sheetID.value,
+                    meetName: result.meetName
+                }
+
+                chrome.runtime.sendMessage(data);
+            });
 
         } else {
             txtInfo.innerHTML = 'Please Enter 6 digit number only!';

@@ -75,6 +75,7 @@ const API_KEY = 'AIzaSyCzT1Ltha85DX-xRemUx1b9JkipCdPEgiU';
 const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 const MANAGEMENT_SPREADSHEET_ID = '1Oa6kkkpFVh7o98gEmoNgnAsQmvNeRmzu8awyNrp3wWI';
 const MANAGEMENT_SPREADSHEET_TAB_NAME = 'main';
+let range = null;
 
 // Initialize gapi
 function onGAPILoad() {
@@ -98,7 +99,7 @@ function onGAPILoad() {
 }
 
 // Check whether sheet code in the management spreadsheet
-function checkSheetCode(programmeAvailable, sheetCode) {
+function checkSheetCode(programmeAvailable, sheetCode, meetName) {
 
     var data = {
         name: 'sheetCodeIsOn',
@@ -118,9 +119,10 @@ function checkSheetCode(programmeAvailable, sheetCode) {
             data.detail = programmeAvailable[i][1];
             data.sheetID = programmeAvailable[i][2];
 
+            checkSheetTab(data.sheetID, meetName);
+
             // Create header for Sheet if Sheet empty
             checkEmptySheet(data.sheetID);
-            // checkSheetTab(data.sheetID);
 
             break;
         }
@@ -134,7 +136,7 @@ function checkEmptySheet(sheetID) {
 
     gapi.client.sheets.spreadsheets.values.get({
         spreadsheetId: sheetID,
-        range: 'Sheet1',
+        range: range,
     }).then(async function (response) {
 
         if(response.result.values === undefined){
@@ -176,37 +178,67 @@ function checkEmptySheet(sheetID) {
     });
 }
 
-async function checkSheetTab(sheetID) {
+function checkSheetTab(sheetID, meetName) {
 
-    let requests = []
-    requests = requests.concat(AddASheet("sheetName"));
-    console.log(requests);
+    const d = new Date();
+    var currentDate = formatDate(d); // Use different format instead of toLocaleDateString()
+    var sheetName = meetName + ' - ' + currentDate;
 
-    const body = {
-        requests: requests,
-        includeSpreadsheetInResponse: true,
-    }
+    // Check current available sheet name
+    gapi.client.sheets.spreadsheets.get({
+        spreadsheetId: sheetID
+    }).then(async function (response) {
 
-    const init = {
-        method: 'POST',
-        async: true,
-        headers: {
-            Authorization: 'Bearer ' + clientToken,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-    }
+        // Get Available Sheet name
+        let sheets = [];
+        // console.log(response.result.sheets.length);
+        for(let i = 0; i < response.result.sheets.length; i++){
+            sheets.push(response.result.sheets[i].properties.title)
+        }
+        // Check whether sheet name already exist
+        if(!sheets.includes(sheetName)){
+            
+            //create new sheetname
+            let requests = []
+            requests = requests.concat(AddASheet(sheetName));
+            // console.log(requests);
 
-    const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}:batchUpdate`,
-        init
-    )
-    
-    if (response.ok) {
-        console.log('Successfully create new Sheet!');
-    } else {
-        console.log('Fail to create new Sheet!');
-    }
+            const body = {
+                requests: requests,
+                includeSpreadsheetInResponse: true,
+            }
+
+            const init = {
+                method: 'POST',
+                async: true,
+                headers: {
+                    Authorization: 'Bearer ' + clientToken,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            }
+
+            const response = await fetch(
+                `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}:batchUpdate`,
+                init
+            )
+            
+            if (response.ok) {
+                console.log('Successfully create new Sheet!');
+            } else {
+                console.log('Fail to create new Sheet!');
+            }
+
+        }else{
+            console.log("Sheet Name Already Exist!");
+        }
+
+    }, function (error) {
+        console.log('Error', error)
+    });
+
+    range = sheetName;
+
 }
 
 function formatDate(d){
@@ -216,7 +248,7 @@ function formatDate(d){
     var month = ('0' + (d.getMonth() + 1)).slice(-2);
     var year = ('0' + d.getFullYear()).slice(-4);
 
-    return day + ', ' + month + '-' + date + '-' + year;
+    return day + ', ' + date + '-' + month + '-' + year;
 }
 
 function calculateInterval(currentTime, lastActiveTime){
@@ -255,7 +287,7 @@ chrome.extension.onMessage.addListener(
                     programmeAvailable.shift(); // Remove title row in Sheet from the array
                     // console.log(programmeAvailable);
 
-                    checkSheetCode(programmeAvailable, request.code);
+                    checkSheetCode(programmeAvailable, request.code, request.meetName);
 
                 }, function (error) {
                     console.log('Error', error)
@@ -288,7 +320,7 @@ chrome.extension.onMessage.addListener(
                     // Append values to the spreadsheet
                     gapi.client.sheets.spreadsheets.values.append({
                         spreadsheetId: request.sheetID,
-                        range: 'Sheet1',
+                        range: range,
                         valueInputOption: 'USER_ENTERED',
                         resource: body
                     }).then((response) => {

@@ -23,7 +23,8 @@ const handState = {
     handGesture: null, // store current hand gesture module (Number, Sign, Mouse)
     handStatusDrawing: null, // whether can draw hand landmark on the canvas
     previousGesture: null, // used to prevent gesture perfrom too many time
-    sheetCode: null // use to store gapi spreadsheet detail get from popup.js
+    sheetCode: null, // use to store gapi spreadsheet detail get from popup.js
+    meetName: null // use to store the name of the meet for Google Sheet
 };
 
 // Available Gesture
@@ -1960,6 +1961,10 @@ function realVideoAdded(video) {
 }
 
 async function start() {
+    // Get the Google Meet Name and save to storage
+    let meetName = ((window.location.href).split("?")[0]).split("/")[3];
+    chrome.storage.sync.set({ "meetName": meetName });
+    
     await loadhandState();
     loadHandGesture();
     overrideGetUserMedia();

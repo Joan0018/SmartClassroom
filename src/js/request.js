@@ -289,6 +289,18 @@ function createHandSheetHeaders(sheetId) {
                             },
                             {
                                 userEnteredValue: {
+                                    stringValue: 'Email',
+                                },
+                                userEnteredFormat: {
+                                    horizontalAlignment: 'LEFT',
+                                    textFormat: {
+                                        bold: true,
+                                    },
+                                },
+                                note: "The student's email.",
+                            },
+                            {
+                                userEnteredValue: {
                                     stringValue: 'Hand Gesture',
                                 },
                                 userEnteredFormat: {
