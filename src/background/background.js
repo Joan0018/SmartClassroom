@@ -98,15 +98,15 @@ function onGAPILoad() {
     });
 }
 
+var data = {
+    name: 'sheetCodeIsOn',
+    sheetCode: null,
+    detail: null,
+    sheetID: null
+}
+
 // Check whether sheet code in the management spreadsheet
 function checkSheetCode(programmeAvailable, sheetCode, meetName) {
-
-    var data = {
-        name: 'sheetCodeIsOn',
-        sheetCode: null,
-        detail: null,
-        sheetID: null
-    }
 
     for (let i = 0; i < programmeAvailable.length; i++) {
         console.log(programmeAvailable[i][0]);
@@ -121,9 +121,6 @@ function checkSheetCode(programmeAvailable, sheetCode, meetName) {
 
             checkSheetTab(data.sheetID, meetName);
 
-            // Create header for Sheet if Sheet empty
-            checkEmptySheet(data.sheetID);
-
             break;
         }
     }
@@ -132,50 +129,38 @@ function checkSheetCode(programmeAvailable, sheetCode, meetName) {
     chrome.runtime.sendMessage(data);
 }
 
-function checkEmptySheet(sheetID) {
+async function AddHeader(sheetID) {
 
-    gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: sheetID,
-        range: range,
-    }).then(async function (response) {
+    //Create header
+    let requests = []
+    requests = requests.concat(createHandSheetHeaders(sheetID));
+    console.log(requests);
 
-        if(response.result.values === undefined){
-            //Create header
-            let requests = []
-            requests = requests.concat(createHandSheetHeaders(0));
-            console.log(requests);
+    const body = {
+        requests: requests,
+        includeSpreadsheetInResponse: true,
+    }
+
+    const init = {
+        method: 'POST',
+        async: true,
+        headers: {
+            Authorization: 'Bearer ' + clientToken,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    }
+
+    const response = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${data.sheetID}:batchUpdate`,
+        init
+    )
     
-            const body = {
-                requests: requests,
-                includeSpreadsheetInResponse: true,
-            }
-
-            const init = {
-                method: 'POST',
-                async: true,
-                headers: {
-                    Authorization: 'Bearer ' + clientToken,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            }
-
-            const response = await fetch(
-                `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}:batchUpdate`,
-                init
-            )
-            
-            if (response.ok) {
-                console.log('Successfully create Sheet\'s header!');
-            } else {
-                console.log('Fail to create Sheet\'s header! Please contact TARUC Management');
-            }
-
-        }
-
-    }, function (error) {
-        console.log('Error', error)
-    });
+    if (response.ok) {
+        console.log('Successfully create Sheet\'s header!');
+    } else {
+        console.log('Fail to create Sheet\'s header! Please contact TARUC Management');
+    }
 }
 
 function checkSheetTab(sheetID, meetName) {
@@ -221,10 +206,22 @@ function checkSheetTab(sheetID, meetName) {
             const response = await fetch(
                 `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}:batchUpdate`,
                 init
-            )
+            );
             
+            const data = await response.json();
+            console.log(data);
+
+            // Get sheetId for the new Sheet Name to create header
+            let spreadsheetProperties = data.updatedSpreadsheet.sheets;
+            let maxlength = data.updatedSpreadsheet.sheets.length
+            let newSheetID = spreadsheetProperties[maxlength - 1].properties.sheetId;
+
             if (response.ok) {
                 console.log('Successfully create new Sheet!');
+
+                //Create header
+                AddHeader(newSheetID);
+
             } else {
                 console.log('Fail to create new Sheet!');
             }
