@@ -280,7 +280,7 @@ function createHandSheetHeaders(sheetId) {
                                     stringValue: 'Username',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'LEFT',
+                                    horizontalAlignment: 'CENTER',
                                     textFormat: {
                                         bold: true,
                                     },
@@ -292,7 +292,7 @@ function createHandSheetHeaders(sheetId) {
                                     stringValue: 'Email',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'LEFT',
+                                    horizontalAlignment: 'CENTER',
                                     textFormat: {
                                         bold: true,
                                     },
@@ -304,7 +304,7 @@ function createHandSheetHeaders(sheetId) {
                                     stringValue: 'Hand Gesture',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'LEFT',
+                                    horizontalAlignment: 'CENTER',
                                     textFormat: {
                                         bold: true,
                                     },
@@ -316,7 +316,7 @@ function createHandSheetHeaders(sheetId) {
                                     stringValue: 'Date',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'LEFT',
+                                    horizontalAlignment: 'CENTER',
                                     textFormat: {
                                         bold: true,
                                     },
@@ -325,22 +325,22 @@ function createHandSheetHeaders(sheetId) {
                             },
                             {
                                 userEnteredValue: {
-                                    stringValue: 'Last Active Time',
+                                    stringValue: 'System Start Time',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'RIGHT',
+                                    horizontalAlignment: 'CENTER',
                                     textFormat: {
                                         bold: true,
                                     },
                                 },
-                                note: "The student's last active time after previous gesture done.",
+                                note: "The student's system start time.",
                             },
                             {
                                 userEnteredValue: {
                                     stringValue: 'Gesture Time',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'RIGHT',
+                                    horizontalAlignment: 'CENTER',
                                     textFormat: {
                                         bold: true,
                                     },
@@ -352,7 +352,7 @@ function createHandSheetHeaders(sheetId) {
                                     stringValue: 'Time Interval',
                                 },
                                 userEnteredFormat: {
-                                    horizontalAlignment: 'RIGHT',
+                                    horizontalAlignment: 'CENTER',
                                     textFormat: {
                                         bold: true,
                                     },

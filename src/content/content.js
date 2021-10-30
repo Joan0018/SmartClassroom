@@ -2199,11 +2199,11 @@ function handGestureChatBox(gestureName) {
                         email: currentEmail,
                         gesture: gestureName,
                         sheetID: handState.sheetCode.sheetID,
-                        lastActiveTime: handState.handActiveTimeStamp
+                        startTime: handState.handActiveTimeStamp
                     }
 
                     // Update last active timestamp
-                    chrome.storage.sync.set({ "handActiveTimeStamp": new Date().toString() });
+                    //chrome.storage.sync.set({ "handActiveTimeStamp": new Date().toString() });
 
                     chrome.runtime.sendMessage(data);
                 }

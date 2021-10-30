@@ -248,9 +248,9 @@ function formatDate(d){
     return day + ', ' + date + '-' + month + '-' + year;
 }
 
-function calculateInterval(currentTime, lastActiveTime){
+function calculateInterval(currentTime, startTime){
 
-    var timeInterval = Math.abs(currentTime - lastActiveTime) / 1000;
+    var timeInterval = Math.abs(currentTime - startTime) / 1000;
 
     // calculate hours
     const hours = Math.floor(timeInterval / 3600) % 24;
@@ -298,9 +298,9 @@ chrome.extension.onMessage.addListener(
                     const d = new Date();
                     var currentDate = formatDate(d); // Use different format instead of toLocaleDateString()
                     var currentTime = new Date();
-                    var lastActiveTime = new Date(request.lastActiveTime); 
+                    var startTime = new Date(request.startTime); 
 
-                    var interval = calculateInterval(currentTime, lastActiveTime);
+                    var interval = calculateInterval(currentTime, startTime);
 
                     const body = {
                         values: [[
@@ -308,7 +308,7 @@ chrome.extension.onMessage.addListener(
                             request.email,
                             request.gesture,
                             currentDate,
-                            lastActiveTime.toLocaleTimeString(),
+                            startTime.toLocaleTimeString(),
                             currentTime.toLocaleTimeString(),
                             interval
                         ]]
