@@ -19,7 +19,8 @@ const handState = {
     chatbotText: null, // use to store message to put in Google Meet's Chatbox
     chatbotEnable: false, // use to determine whether send the chatbotText (Spacebar Key)
     handModuleIsOn: true, // whether start the hand gesture tracking and recognition module
-    handActiveTimeStamp: null, // use to store the last active hand timestamp for interval calculation
+    handActiveTimeStamp: null, // use to store the start time for interval calculation
+    handTimeInterval: 0, //use to store the time for interval calculation (prevent same hand appear more than one in specific time)
     handGesture: null, // store current hand gesture module (Number, Sign, Mouse)
     handStatusDrawing: null, // whether can draw hand landmark on the canvas
     previousGesture: null, // used to prevent gesture perfrom too many time
@@ -2089,31 +2090,35 @@ function adjustHandGesture() {
 
 // Action when gesture detected
 function handGestureAction(gestureName) {
-
+    
     if (gestureName !== handState.previousGesture) {
+        var currentTime = new Date();
 
+        var interval = Math.abs(currentTime - handState.handTimeInterval) / 1000;
+        // console.log(interval);
+        
         handState.previousGesture = gestureName;
-
+        
         switch (gestureName) {
             case "One":
                 handState.chatbotText = "chosen first options!";
-                return
+                break;
 
             case "Two":
                 handState.chatbotText = "chosen second options!";
-                return
+                break;
 
             case "Three":
                 handState.chatbotText = "chosen third options!";
-                return
+                break;
 
             case "Four":
                 handState.chatbotText = "chosen forth options!";
-                return
+                break;
 
             case "Five":
-                handState.chatbotText = "chosen fifth options!";
-                return
+                handState.chatbotText = ""; // Will do nothing 
+                return;
 
             case "Help":
                 var help = document.querySelector('[jsname="SqzZRd"]');
@@ -2126,15 +2131,15 @@ function handGestureAction(gestureName) {
 
             case "Thank_You":
                 handState.chatbotText = "saying Thank You!"
-                return
+                break;
 
             case "Nice,I'm_Good":
                 handState.chatbotText = "currently nice and good!"
-                return
+                break;
 
             case "No_Question":
                 handState.chatbotText = "no question for now!"
-                return
+                break;
 
             case "Webcam_Microphone":
                 var webcam_microphone = document.querySelectorAll('[jsname="BOHaEe"]');
@@ -2153,6 +2158,12 @@ function handGestureAction(gestureName) {
                 handState.chatbotText = "";
                 return
         }
+
+        if(interval > 10.0){
+            interval = 0;
+            handGestureChatBox(gestureName);
+        }
+        
     }
 
 }
@@ -2204,6 +2215,7 @@ function handGestureChatBox(gestureName) {
 
                     // Update last active timestamp
                     //chrome.storage.sync.set({ "handActiveTimeStamp": new Date().toString() });
+                    handState.handTimeInterval = new Date();
 
                     chrome.runtime.sendMessage(data);
                 }
@@ -2289,10 +2301,12 @@ function handInRealTime() {
 
                                 handGestureAction(handGesture.name);
 
+                                // Backup plan
                                 if (handState.chatbotText != null && handState.chatbotEnable == true) {
                                     // Let Google Meet send message
                                     handGestureChatBox(handGesture.name);
                                     handState.chatbotEnable = false;
+                                    handState.handTimeInterval = new Date();
                                 }
 
                                 handState.statusBox.innerHTML = "Gesture: " + handGesture.name;
