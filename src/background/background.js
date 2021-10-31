@@ -239,8 +239,8 @@ function checkSheetTab(sheetID, meetName) {
 }
 
 function formatDate(d){
-    const weekday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var day = weekday[d.getDay() - 1];
+    const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var day = weekday[d.getDay()];
     var date = ('0' + d.getDate()).slice(-2);
     var month = ('0' + (d.getMonth() + 1)).slice(-2);
     var year = ('0' + d.getFullYear()).slice(-4);
