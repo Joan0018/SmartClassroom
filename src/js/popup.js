@@ -48,7 +48,7 @@ const meetLanguage = {
 			popup_lang: 'Smart Classroom',
 			popup_face_register: 'Facial Registration',
 			popup_take_attendance: 'Take Attendance',
-			popup_overall_analysis: 'Overall Analysis',
+			popup_overall_analysis: 'Eye Tracking',
 			language: 'Language',
 		},
 	},

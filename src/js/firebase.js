@@ -127,13 +127,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         }
         case "RetrieveStudentAttend":{
             chrome.identity.getAuthToken({ interactive: true }, (token) => {
-                var attedList = [];
+                var attendList = [];
                 firebase.database().ref('AttendedStudent/' + request.data).on('value', (snapshot) => {
                     snapshot.forEach(function(childSnapshot) {
-                        attedList.push({
+                        attendList.push({
                             'id': childSnapshot.val().ID,
                             'name': childSnapshot.val().Name,
-                            'time': childSnapshot.val().TakeTime
+                            'email': childSnapshot.val().Email,
+                            'start': childSnapshot.val().StartTime,
+                            'take': childSnapshot.val().TakeTime,
+                            'end': childSnapshot.val().EndTime
                         })
                     });
 
@@ -141,7 +144,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
                     console.log('The read failed: ' + errorObject.name);
                 }); 
                 
-                createSpreadsheet(clientToken, request.data,attedList, request.sheet, request.meetCode, request.currentTime)
+                createSpreadsheet(clientToken, request.data,attendList, request.sheet, request.meetCode, request.currentTime)
 
             })
         }
@@ -228,7 +231,7 @@ function refreshToken(token, callback) {
         chrome.identity.getAuthToken({ interactive: true }, callback)
     })
 }
-// const notifierMap = new Map()
+
 
 /**
  * 
@@ -256,33 +259,10 @@ function refreshToken(token, callback) {
         let spreadsheetId = sheet;
         let sheetId = 0;
         let requests = []
-        // const notifierKey = `${className}-${code}`
-        // if (!notifierMap.has(notifierKey)) {
-        //     notifierMap.set(notifierKey, new Notifier(className, code))
-        // }
-        // const notifier = notifierMap.get(notifierKey)
-        // notifier.post(port, { progress: 0 })
-        // const newSpreadsheet = await (
-        //     await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
-        // ).json()
-        // if (newSpreadsheet.spreadsheetId == undefined) {
-        //     throw newSpreadsheet.error
-        // }
-        // console.log(
-        //     `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
-        // )
-        // chrome.storage.local.set({
-        //     'spreadsheet-id': newSpreadsheet.spreadsheetId,
-        // })
-        // spreadsheetId = newSpreadsheet.spreadsheetId
-        //requests = requests.concat(updateSheetProperties(className, code, 0, '*'))
         requests = requests.concat(createHeaders(sheetId))
         const icReqs = await initializeCells(code, sheetId,attend)
-        //notifier.post(port, { progress: 0.6 })
         requests = requests.concat(icReqs)
         const data = await batchUpdate(token, requests, spreadsheetId, sheetId)
-        //notifier.post(port, { done: true, progress: 1 })
-        //notifierMap.delete(notifierKey)
         console.log('Initialize spreadsheet response:')
         console.log(data)
         if(data == null){
@@ -338,33 +318,10 @@ async function editSpreadSheet(token, code, attend, sheet, sheetId){
         }
         let spreadsheetId = sheet;
         let requests = []
-        // const notifierKey = `${className}-${code}`
-        // if (!notifierMap.has(notifierKey)) {
-        //     notifierMap.set(notifierKey, new Notifier(className, code))
-        // }
-        // const notifier = notifierMap.get(notifierKey)
-        // notifier.post(port, { progress: 0 })
-        // const newSpreadsheet = await (
-        //     await fetch('https://sheets.googleapis.com/v4/spreadsheets', init)
-        // ).json()
-        // if (newSpreadsheet.spreadsheetId == undefined) {
-        //     throw newSpreadsheet.error
-        // }
-        // console.log(
-        //     `Successfully created Attendance spreadsheet with id ${newSpreadsheet.spreadsheetId}.`
-        // )
-        // chrome.storage.local.set({
-        //     'spreadsheet-id': newSpreadsheet.spreadsheetId,
-        // })
-        // spreadsheetId = newSpreadsheet.spreadsheetId
-        //requests = requests.concat(updateSheetProperties(className, code, 0, '*'))
         requests = requests.concat(createHeaders(sheetId))
         const icReqs = await initializeCells(code, sheetId,attend)
-        //notifier.post(port, { progress: 0.6 })
         requests = requests.concat(icReqs)
         const data = await batchUpdate(token, requests, spreadsheetId, sheetId)
-        //notifier.post(port, { done: true, progress: 1 })
-        //notifierMap.delete(notifierKey)
         console.log('Initialize spreadsheet response:')
         console.log(data)
         if(data == null){
@@ -373,59 +330,3 @@ async function editSpreadSheet(token, code, attend, sheet, sheetId){
 
     }
 }
-
-// async function updateSpreadsheet(token, className, code, spreadsheetId, port) {
-//     let requests = []
-//     Utils.log('Updating spreadsheet...')
-
-//     // const notifierKey = `${className}-${code}`
-//     // if (!notifierMap.has(notifierKey)) {
-//     //     notifierMap.set(notifierKey, new Notifier(className, code))
-//     // }
-//     // const notifier = notifierMap.get(notifierKey)
-//     // notifier.post(port, { progress: 0 })
-//     const classMeta = await getMetaByKey(className, token, spreadsheetId)
-//     // notifier.post(port, { progress: 0.15 })
-
-//     let sheetId
-//     if (classMeta == null) {
-//         const spreadsheet = await getSpreadsheet(token, spreadsheetId)
-//         sheetId =
-//             spreadsheet.sheets.reduce(
-//                 (acc, sheet) => Math.max(acc, sheet.properties.sheetId),
-//                 0
-//             ) + 1
-//         requests = requests.concat(addSheet(className, code, sheetId))
-//         requests = requests.concat(createHeaders(sheetId))
-//         Utils.log(`Creating new sheet for class ${className}, ID ${sheetId}`)
-//     } else {
-//         sheetId = classMeta.location.sheetId
-//     }
-//     const codeMeta = await getMetaByKey(
-//         `${code}§${sheetId}`,
-//         token,
-//         spreadsheetId
-//     )
-//     notifier.post(port, { progress: 0.3 })
-//     const startRow =
-//         codeMeta == null ? 1 : codeMeta.location.dimensionRange.startIndex
-//     const icReqs =
-//         codeMeta == null
-//             ? await initializeCells(code, sheetId)
-//             : await updateCells(token, code, spreadsheetId, sheetId, startRow)
-//     notifier.post(port, { progress: 0.4 })
-//     requests = requests.concat(icReqs)
-//     let data = await batchUpdate(token, requests, spreadsheetId, sheetId)
-//     notifier.post(port, { progress: 0.65 })
-//     Utils.log('Update spreadsheet response:')
-//     console.log(data)
-//     const cgReqs = await collapseGroup(token, code, spreadsheetId, sheetId)
-//     notifier.post(port, { progress: 0.75 })
-//     if (cgReqs) {
-//         data = await batchUpdate(token, cgReqs, spreadsheetId, sheetId)
-//         Utils.log('Update metadata and groups response:')
-//         console.log(data)
-//     }
-//     notifier.post(port, { done: true, progress: 1 })
-//     notifierMap.delete(notifierKey)
-// }
