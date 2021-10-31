@@ -163,9 +163,64 @@ _For hand recognition module is used for interactions between student and staff_
 5. Google Spreadsheet for checking
 
    ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Facial/step5.png)
+   
+6. Demo Video
+
+   https://user-images.githubusercontent.com/66239936/139573552-500a82ac-6395-4557-ace8-248dc125b676.mp4
+
+
+
+  
 
 <a id="hand"><h2 style="display: inline-block">Hand Detection and Recognition</h2></a>
+## How to use in Google Meet
+1. Open popup.js by clicking the extension
+2. Get <kbd>Sheet Code</kbd> and Enter the Sheet Code
+3. Start Model
 
+![](https://i.imgur.com/Ld7fhCQ.png)
+
+## How to shutdown chrome extension
+> Remark: Directly refresh Chrome Extension in `chrome://extensions` will cause last time sheetCode auto fill in and input tag read-only. In order to solve this, just start the model and stop the model to update the sheetCode to empty string. 
+1. Open popup.js by clicking the extension
+2. Click <kbd>Stop Model</kbd> to shutdown chrome extension
+
+![](https://i.imgur.com/rYLFEPG.png)
+
+## Available Gesture
+> Remark: The chrome extension provided 2 Gesture (Number and Sign) and 1 Mouse Function.
+
+- Number (Shorcut key: LCtrl + LShift + 1)  <br>
+> Remark: All of the number will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] chosen [Gesture] options.)
+
+| ![](https://i.imgur.com/Y2q03M9.png) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/9MumRsG.png) | ![](https://i.imgur.com/aTNlNMk.png) | ![](https://i.imgur.com/crST21p.png) |
+|--|--|--|--|--|
+| One | Two | Three | Four | Five |
+
+<br>
+<br>
+
+- Sign (Shorcut key: LCtrl + LShift + 2) <br>
+> Remark: Some of the Sign (Nice, I'm Good, Thank You, No Question) will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] [Gesture])
+
+| ![](https://i.imgur.com/3seNAWn.png) | ![](https://i.imgur.com/xohVi2a.png) | ![](https://i.imgur.com/v9doTEX.png?6) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/HJy827t.png) | ![](https://i.imgur.com/hWhOiGT.png) |
+|--|--|--|--|--|--|
+| Help | Stick Caption | WebCam_Microphone | Nice, I'm Good | Thank You | No Question |
+
+<br>
+<br>
+
+- Mouse (No Shorcut Key Available) <br>
+> Remark: Required to refresh Website 
+
+  Please refer to developer website [Handsfree's Palm Pointer](https://handsfree.dev/plugin/palmpointers/)
+
+<br>
+
+## Sample Result
+https://user-images.githubusercontent.com/57024183/137918644-977b2db3-66db-49e7-9735-81faea563330.mp4
+
+<br>
 
 
 
