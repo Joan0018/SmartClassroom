@@ -138,16 +138,35 @@ To get a local copy up and running follow these simple steps.
 <!-- USAGE EXAMPLES -->
 <a id="usage"><h2 style="display: inline-block">Usage</h2></a>
 
-The usage of smart classroom chrome extension is discussed based on its module.
+_For facial recognition module is used for student attendance tracking and management_
+<br/>
+_For hand recognition module is used for interactions between student and staff_
 
 <a id="facial"><h2 style="display: inline-block">Facial Detection and Recognition</h2></a>
 
+1. Chrome Extension Functions
+
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Facial/step1.png)
+
+2. Enables the student to register the face
+
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Facial/step2.png)
+
+3. Enables the student to take the attendance
+
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Facial/step3.png)
+   
+4. A tab for lecturer or tutor to check the current participants and attendance status
+
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Facial/step4.png)
+   
+5. Google Spreadsheet for checking
+
+   ![Image of Step](https://github.com/Joan0018/SmartClassroom/blob/main/process/Facial/step5.png)
+
 <a id="hand"><h2 style="display: inline-block">Hand Detection and Recognition</h2></a>
 
-<!-- Will update after FYP Report done -->
-_For more facial recognition examples, please refer to the [Documentation](https://example.com)_
 
-_For more hand recognition examples, please refer to the [Documentation](https://example.com)_
 
 
 <!-- CONTACT -->
@@ -158,7 +177,10 @@ Joan Hau - [@githubProfile](https://github.com/Joan0018)
 Lim Kah Yee - [@githubProfile](https://github.com/lky1020)
 
 Project Link: [@VirtualClassroom](https://github.com/Joan0018/SmartClassroom) 
-
+<!-- Will update after FYP Report done -->
+_For more facial recognition examples, please refer to the [Documentation](https://example.com)_
+<br/>
+_For more hand recognition examples, please refer to the [Documentation](https://example.com)_
 
 <!-- ACKNOWLEDGEMENTS -->
 <a id="acknowledgements"><h2 style="display: inline-block">Acknowledgement</h2></a>
