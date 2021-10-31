@@ -4,7 +4,7 @@ const meetLanguage = {
 			popup_lang: 'Smart Classroom',
 			popup_face_register: 'Facial Registration',
 			popup_take_attendance: 'Take Attendance',
-			popup_overall_analysis: 'Overall Analysis',
+			popup_overall_analysis: 'Eye Tracking',
 			language: 'Language',
 		},
 		classHTML: {
@@ -30,7 +30,7 @@ const meetLanguage = {
 			popup_lang: 'Bilik Darjah Pintar',
 			popup_face_register: 'Pendaftaran Muka',
 			popup_take_attendance: 'Kehadiran',
-			popup_overall_analysis: 'Analisis Keseluruhan',
+			popup_overall_analysis: 'pengesanan mata',
 			language: 'Bahasa',
 		},
 		classHTML: {
@@ -55,7 +55,7 @@ const meetLanguage = {
 			popup_lang: '智慧课堂',
 			popup_face_register: '人脸登记',
 			popup_take_attendance: '出勤登记',
-			popup_overall_analysis: '整体分析',
+			popup_overall_analysis: '眼球追踪',
 			language: '语言',
 		},
 		classHTML: {
