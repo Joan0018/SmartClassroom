@@ -2094,11 +2094,14 @@ function handGestureAction(gestureName) {
     if (gestureName !== handState.previousGesture) {
         var currentTime = new Date();
 
+        // Calculate time interval to prevent duplicate hand gesture
         var interval = Math.abs(currentTime - handState.handTimeInterval) / 1000;
         // console.log(interval);
         
+        // Update lastest hand gesture
         handState.previousGesture = gestureName;
         
+        // Perform action based on current hand gesture
         switch (gestureName) {
             case "One":
                 handState.chatbotText = "chosen first options!";
@@ -2117,10 +2120,11 @@ function handGestureAction(gestureName) {
                 break;
 
             case "Five":
-                handState.chatbotText = ""; // Will do nothing 
+                handState.chatbotText = ""; // Will do nothing
                 return;
 
             case "Help":
+                //Click on Google Meet Raise Hand Button
                 var help = document.querySelector('[jsname="SqzZRd"]');
                 if (help != null) {
                     help.click();
@@ -2142,6 +2146,7 @@ function handGestureAction(gestureName) {
                 break;
 
             case "Webcam_Microphone":
+                // Click on Google Meet Microphone and Webcam button
                 var webcam_microphone = document.querySelectorAll('[jsname="BOHaEe"]');
                 webcam_microphone[0].click();
                 webcam_microphone[1].click();
@@ -2150,6 +2155,7 @@ function handGestureAction(gestureName) {
                 return
 
             case "Stick_Captions":
+                // Click on Google Meet Caption button
                 var cap = document.querySelector('[jsname="r8qRAd"]');
                 if (cap !== null) {
                     cap.click();
@@ -2159,6 +2165,7 @@ function handGestureAction(gestureName) {
                 return
         }
 
+        // Only allow the Google Meet sned message after 10 seconds
         if(interval > 10.0){
             interval = 0;
             handGestureChatBox(gestureName);
@@ -2301,7 +2308,7 @@ function handInRealTime() {
 
                                 handGestureAction(handGesture.name);
 
-                                // Backup plan
+                                // Backup plan (Spacebar key to send correct message immediately)
                                 if (handState.chatbotText != null && handState.chatbotEnable == true) {
                                     // Let Google Meet send message
                                     handGestureChatBox(handGesture.name);
