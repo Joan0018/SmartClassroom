@@ -193,7 +193,7 @@ _For hand recognition module is used for interactions between student and staff_
 - Number (Shorcut key: LCtrl + LShift + 1)  <br>
 > Remark: All of the number will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] chosen [Gesture] options.)
 
-| ![](https://i.imgur.com/Y2q03M9.png) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/9MumRsG.png) | ![](https://i.imgur.com/aTNlNMk.png) | ![](https://i.imgur.com/crST21p.png) |
+| ![](https://i.imgur.com/xL89ZE7.png) | ![](https://i.imgur.com/Gu6eqV8.png) | ![](https://i.imgur.com/nyOaaKO.png) | ![](https://i.imgur.com/h88vanY.png) | ![](https://i.imgur.com/HlQdrJt.png) |
 |--|--|--|--|--|
 | One | Two | Three | Four | Five |
 
@@ -203,7 +203,7 @@ _For hand recognition module is used for interactions between student and staff_
 - Sign (Shorcut key: LCtrl + LShift + 2) <br>
 > Remark: Some of the Sign (Nice, I'm Good, Thank You, No Question) will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] [Gesture])
 
-| ![](https://i.imgur.com/3seNAWn.png) | ![](https://i.imgur.com/xohVi2a.png) | ![](https://i.imgur.com/v9doTEX.png?6) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/HJy827t.png) | ![](https://i.imgur.com/hWhOiGT.png) |
+| ![](https://i.imgur.com/S93FVl1.png) | ![](https://i.imgur.com/ArMIHDR.png) | ![](https://i.imgur.com/wP3byHw.png) | ![](https://i.imgur.com/ffthm88.png) | ![](https://i.imgur.com/rLbFJ2A.png) | ![](https://i.imgur.com/pfDXJMn.png) |
 |--|--|--|--|--|--|
 | Help | Stick Caption | WebCam_Microphone | Nice, I'm Good | Thank You | No Question |
 
