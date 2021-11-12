@@ -174,6 +174,10 @@ _For hand recognition module is used for interactions between student and staff_
 
 <a id="hand"><h2 style="display: inline-block">Hand Detection and Recognition</h2></a>
 ## How to use in Google Meet
+> Remark: Test Account: smartclassroomfyp2021@gmail.com, Password: smartclassroom2021
+
+Link to Install Video: [How to Install and Use](https://drive.google.com/file/d/1CmphpK_jC8ZYQNdENGVDKnUEgLUykBmG/view?usp=sharing)
+
 1. Open popup.js by clicking the extension
 2. Get <kbd>Sheet Code</kbd> and Enter the Sheet Code
 3. Start Model
