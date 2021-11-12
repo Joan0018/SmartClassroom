@@ -5,7 +5,25 @@ const handsfree = new Handsfree({
         maxNumHands: 1,
         minDetectionConfidence: 0.85,
         minTrackingConfidence: 0.5
-    }
+    },
+    pose: {
+        enabled: true,
+        
+        // Outputs only the top 25 pose landmarks if true,
+        // otherwise shows all 33 full body pose landmarks
+        // - Note: Setting this to true may result in better accuracy 
+        upperBodyOnly: true,
+    
+        // Helps reduce jitter over multiple frames if true
+        smoothLandmarks: true,
+    
+        // Minimum confidence [0 - 1] for a person detection to be considered detected
+        minDetectionConfidence: 0.5,
+    
+        // Minimum confidence [0 - 1] for the pose tracker to be considered detected
+        // Higher values are more robust at the expense of higher latency
+        minTrackingConfidence: 0.5
+      }
 })
 
 var totalConfidence = 0;
@@ -2287,6 +2305,23 @@ function handInRealTime() {
             if (Object.keys(handsfree.data).length !== 0) {
 
                 if (handState.handStatusDrawing === 'start') {
+
+                    if(handsfree.data.pose.poseLandmarks !== undefined){
+                        console.log(handsfree.data.pose.poseLandmarks);
+                        // Draw pose landmarks on the canvas
+                        if (handsfree.data.pose.poseLandmarks) {
+                                drawConnectors(ctx, handsfree.data.pose.poseLandmarks, POSE_CONNECTIONS, {
+                                    color: '#00FF00',
+                                    lineWidth: 5
+                                });
+
+                                drawLandmarks(ctx, handsfree.data.pose.poseLandmarks, {
+                                    color: '#FF0000',
+                                    lineWidth: 2
+                                });
+                        }
+                    }
+
                     if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
 
                         totalConfidence += handsfree.data.hands.multiHandedness[0].score;

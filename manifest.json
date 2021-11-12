@@ -81,6 +81,7 @@
                 "/src/content/browser-polyfill.js",
                 "/src/content/drawing_utils.js",
                 "/src/content/hands.js",
+                "/src/content/pose.js",
                 "/src/content/jquery.min.js",
                 "/src/content/content.js"
             ],
