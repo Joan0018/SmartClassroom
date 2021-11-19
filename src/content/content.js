@@ -34,6 +34,7 @@ const handState = {
     canvas: null,
     username: null, // current username
     statusBox: null, // use to display the gesture identified
+    poseBox: null, // use to display the pose identified
     chatbotText: null, // use to store message to put in Google Meet's Chatbox
     chatbotEnable: false, // use to determine whether send the chatbotText (Spacebar Key)
     handModuleIsOn: true, // whether start the hand gesture tracking and recognition module
@@ -1937,6 +1938,13 @@ async function overrideGetUserMedia() {
     document.body.appendChild(statusBox);
     handState.statusBox = statusBox;
 
+    // Create status box for display message
+    var poseBox = document.createElement("div");
+    poseBox.setAttribute("id", "poseBox");
+    poseBox.setAttribute("style", "width: 175px; height: 25px; color: white; position: absolute; z-index: 999; padding: 5px 5px 0px 5px; top: 20px");
+    document.body.appendChild(poseBox);
+    handState.poseBox = poseBox;
+
     //Get user local video to replace the video in Google Meet
     injectMediaSourceSwap();
 
@@ -2310,16 +2318,20 @@ function handInRealTime() {
                         console.log(handsfree.data.pose.poseLandmarks);
                         // Draw pose landmarks on the canvas
                         if (handsfree.data.pose.poseLandmarks) {
-                                drawConnectors(ctx, handsfree.data.pose.poseLandmarks, POSE_CONNECTIONS, {
-                                    color: '#00FF00',
-                                    lineWidth: 5
-                                });
+                            handState.poseBox.innerHTML = "Person: Detected!";
 
-                                drawLandmarks(ctx, handsfree.data.pose.poseLandmarks, {
-                                    color: '#FF0000',
-                                    lineWidth: 2
-                                });
+                            drawConnectors(ctx, handsfree.data.pose.poseLandmarks, POSE_CONNECTIONS, {
+                                color: '#00FF00',
+                                lineWidth: 5
+                            });
+
+                            drawLandmarks(ctx, handsfree.data.pose.poseLandmarks, {
+                                color: '#FF0000',
+                                lineWidth: 2
+                            });
                         }
+                    }else{
+                        handState.poseBox.innerHTML = "Finding Person...";
                     }
 
                     if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
