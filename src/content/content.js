@@ -40,6 +40,7 @@ const handState = {
     handModuleIsOn: true, // whether start the hand gesture tracking and recognition module
     handActiveTimeStamp: null, // use to store the start time for interval calculation
     handTimeInterval: 0, //use to store the time for interval calculation (prevent same hand appear more than one in specific time)
+    idleTimeInterval: 0, //use to store the time for interval calculation (send warning when person not detected)
     handGesture: null, // store current hand gesture module (Number, Sign, Mouse)
     handStatusDrawing: null, // whether can draw hand landmark on the canvas
     previousGesture: null, // used to prevent gesture perfrom too many time
@@ -2315,10 +2316,11 @@ function handInRealTime() {
                 if (handState.handStatusDrawing === 'start') {
 
                     if(handsfree.data.pose.poseLandmarks !== undefined){
-                        console.log(handsfree.data.pose.poseLandmarks);
+                        // console.log(handsfree.data.pose.poseLandmarks);
                         // Draw pose landmarks on the canvas
                         if (handsfree.data.pose.poseLandmarks) {
                             handState.poseBox.innerHTML = "Person: Detected!";
+                            handState.idleTimeInterval = 0; // update idle time interval
 
                             // Remove Pose Landmark Drawing
                             // drawConnectors(ctx, handsfree.data.pose.poseLandmarks, POSE_CONNECTIONS, {
@@ -2397,6 +2399,24 @@ function handInRealTime() {
                         }
                     }else{
                         handState.poseBox.innerHTML = "Finding Person...";
+
+                        if (handState.idleTimeInterval == 0){
+                            handState.idleTimeInterval = new Date(); // user start idle time
+                        }
+                        
+                    }
+
+                    if (handState.idleTimeInterval != 0){
+                        var currentIdleTime = new Date();
+
+                        // Calculate time interval of idle
+                        var idleInterval = Math.abs(currentIdleTime - handState.idleTimeInterval) / 1000;
+
+                        // Warning time
+                        if (idleInterval > 10.0){
+                            alert("I am an alert box!");
+                            handState.idleTimeInterval = 0;
+                        }
                     }
 
                     const time = Date.now();
