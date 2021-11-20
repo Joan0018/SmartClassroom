@@ -89,7 +89,8 @@
                 "assets/css/material-components.min.css",
                 "assets/css/style.css",
                 "assets/css/btn.css",
-                "/assets/js/handsfree/assets/handsfree.css"
+                "/assets/js/handsfree/assets/handsfree.css",
+                "/src/content/idleBox.css"
             ],
             "all_frames": true,
             "run_at": "document_end"

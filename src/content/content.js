@@ -41,6 +41,7 @@ const handState = {
     handActiveTimeStamp: null, // use to store the start time for interval calculation
     handTimeInterval: 0, //use to store the time for interval calculation (prevent same hand appear more than one in specific time)
     idleTimeInterval: 0, //use to store the time for interval calculation (send warning when person not detected)
+    idleBoxOn: false, // use to indicate whether idlebox popup is on or off
     handGesture: null, // store current hand gesture module (Number, Sign, Mouse)
     handStatusDrawing: null, // whether can draw hand landmark on the canvas
     previousGesture: null, // used to prevent gesture perfrom too many time
@@ -2203,7 +2204,7 @@ function handGestureAction(gestureName) {
 }
 
 // Deal with Google Meet's Chatbox
-function handGestureChatBox(gestureName) {
+function handGestureChatBox(chatboxAction) {
     // Index 2 == meet chatbox
     var chatbox = document.querySelector('[aria-label="Chat with everyone"]');
 
@@ -2222,7 +2223,13 @@ function handGestureChatBox(gestureName) {
             if (textarea != null && handState.chatbotText != "") {
                 // console.log(textarea[0]);
                 textarea[0].click();
-                textarea[0].value = 'ChatBot: \n' + handState.username + ' ' + handState.chatbotText;
+
+                if(chatboxAction != 'idle'){
+                    textarea[0].value = 'ChatBot: \n' + handState.username + ' ' + handState.chatbotText;
+                }else{
+                    textarea[0].value = 'ChatBot: \n' + handState.username + ' has idle for 10 Minutes!';
+                }
+                
 
                 // Assign Enter key to Google Meet's chatbox to send message
                 const keyboardEvent = new KeyboardEvent('keydown', {
@@ -2242,7 +2249,7 @@ function handGestureChatBox(gestureName) {
                         name: "meetAction",
                         username: handState.username,
                         email: currentEmail,
-                        gesture: gestureName,
+                        gesture: chatboxAction,
                         sheetID: handState.sheetCode.sheetID,
                         startTime: handState.handActiveTimeStamp
                     }
@@ -2321,7 +2328,12 @@ function handInRealTime() {
                         if (handsfree.data.pose.poseLandmarks) {
                             handState.poseBox.innerHTML = "Person: Detected!";
                             handState.idleTimeInterval = 0; // update idle time interval
+                            handState.idleBoxOn = false;
 
+                            if(document.getElementById("idleBoxPopup") != null){
+                                document.getElementById("idleBoxPopup").outerHTML='';
+                            }
+                            
                             // Remove Pose Landmark Drawing
                             // drawConnectors(ctx, handsfree.data.pose.poseLandmarks, POSE_CONNECTIONS, {
                             //     color: '#00FF00',
@@ -2413,10 +2425,37 @@ function handInRealTime() {
                         var idleInterval = Math.abs(currentIdleTime - handState.idleTimeInterval) / 1000;
 
                         // Warning time
-                        if (idleInterval > 10.0){
-                            alert("I am an alert box!");
-                            handState.idleTimeInterval = 0;
-                        }
+                        // In demo use 5 seconds and 10 seonds 
+                        if (idleInterval > 5.0){
+
+                            if(handState.idleBoxOn == false){
+                                var idleBox = document.createElement("div");
+                                idleBox.setAttribute("id", "idleBoxPopup");
+                                idleBox.innerText = "Please Attend the class. After 10 Minutes will inform Organizer!";
+                                document.body.appendChild(idleBox);
+    
+                                var closelink = document.createElement("div");
+                                closelink.setAttribute("id", "idleBoxPopupCloseLink");
+                                closelink.innerText = 'X';
+                                document.getElementById("idleBoxPopup").appendChild(closelink);
+    
+                                document.getElementById("idleBoxPopupCloseLink").addEventListener("click", removeIdleBoxPopup);
+    
+                                function removeIdleBoxPopup(){
+                                    document.getElementById("idleBoxPopup").outerHTML='';
+                                    handState.idleBoxOn = false;
+                                }
+
+                                handState.idleBoxOn = true;
+                            }
+
+                            if (idleInterval > 10.0) {
+                                handGestureChatBox("idle");
+                                handState.idleTimeInterval = 0; // update idle time interval
+                            }
+                            
+                        } 
+                    
                     }
 
                     const time = Date.now();
