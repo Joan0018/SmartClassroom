@@ -2320,81 +2320,83 @@ function handInRealTime() {
                         if (handsfree.data.pose.poseLandmarks) {
                             handState.poseBox.innerHTML = "Person: Detected!";
 
-                            drawConnectors(ctx, handsfree.data.pose.poseLandmarks, POSE_CONNECTIONS, {
-                                color: '#00FF00',
-                                lineWidth: 5
-                            });
+                            // Remove Pose Landmark Drawing
+                            // drawConnectors(ctx, handsfree.data.pose.poseLandmarks, POSE_CONNECTIONS, {
+                            //     color: '#00FF00',
+                            //     lineWidth: 5
+                            // });
 
-                            drawLandmarks(ctx, handsfree.data.pose.poseLandmarks, {
-                                color: '#FF0000',
-                                lineWidth: 2
-                            });
+                            // drawLandmarks(ctx, handsfree.data.pose.poseLandmarks, {
+                            //     color: '#FF0000',
+                            //     lineWidth: 2
+                            // });
+
+                            if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
+
+                                totalConfidence += handsfree.data.hands.multiHandedness[0].score;
+                                totalConfidenceCount += 1;
+                                // console.log("Confidence: " + (handsfree.data.hands.multiHandedness[0].score * 100).toFixed(2) + "%");
+                                const gesture = handsfree.model.hands.getGesture();
+        
+                                var handGesture;
+        
+                                if (gesture[0] != null) {
+                                    handGesture = gesture[0];
+        
+                                } else {
+                                    handGesture = gesture[1];
+                                }
+        
+                                if (handState.handGesture !== 'mouse') {
+                                    if (handGesture.name !== "") {
+        
+                                        handGestureAction(handGesture.name);
+        
+                                        // Backup plan (Spacebar key to send correct message immediately)
+                                        if (handState.chatbotText != null && handState.chatbotEnable == true) {
+                                            // Let Google Meet send message
+                                            handGestureChatBox(handGesture.name);
+                                            handState.chatbotEnable = false;
+                                            handState.handTimeInterval = new Date();
+                                        }
+        
+                                        handState.statusBox.innerHTML = "Gesture: " + handGesture.name;
+        
+                                    } else {
+                                        handState.previousGesture = "undefined";
+                                        handState.statusBox.innerHTML = "Gesture: Undefined";
+                                        handState.chatbotEnable = false;
+                                    }
+                                }
+        
+                                // Draw hand landmarks on the canvas
+                                if (handsfree.data.hands.multiHandLandmarks) {
+                                    for (const landmarks of handsfree.data.hands.multiHandLandmarks) {
+        
+                                        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+                                            color: '#00FF00',
+                                            lineWidth: 5
+                                        });
+        
+                                        drawLandmarks(ctx, landmarks, {
+                                            color: '#FF0000',
+                                            lineWidth: 2
+                                        });
+                                    }
+                                }
+        
+                            } else {
+                                handState.statusBox.innerHTML = "Finding Hands...";
+                                if (totalConfidence != 0) {
+                                    // console.log("Total Confidence: " + totalConfidence);
+                                    // console.log("Total Confidence Count: " + totalConfidenceCount);
+                                    // console.log("Confidence: " + ((totalConfidence / totalConfidenceCount) * 100).toFixed(2));
+                                }
+                            }
+
                         }
                     }else{
                         handState.poseBox.innerHTML = "Finding Person...";
-                    }
-
-                    if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
-
-                        totalConfidence += handsfree.data.hands.multiHandedness[0].score;
-                        totalConfidenceCount += 1;
-                        // console.log("Confidence: " + (handsfree.data.hands.multiHandedness[0].score * 100).toFixed(2) + "%");
-                        const gesture = handsfree.model.hands.getGesture();
-
-                        var handGesture;
-
-                        if (gesture[0] != null) {
-                            handGesture = gesture[0];
-
-                        } else {
-                            handGesture = gesture[1];
-                        }
-
-                        if (handState.handGesture !== 'mouse') {
-                            if (handGesture.name !== "") {
-
-                                handGestureAction(handGesture.name);
-
-                                // Backup plan (Spacebar key to send correct message immediately)
-                                if (handState.chatbotText != null && handState.chatbotEnable == true) {
-                                    // Let Google Meet send message
-                                    handGestureChatBox(handGesture.name);
-                                    handState.chatbotEnable = false;
-                                    handState.handTimeInterval = new Date();
-                                }
-
-                                handState.statusBox.innerHTML = "Gesture: " + handGesture.name;
-
-                            } else {
-                                handState.previousGesture = "undefined";
-                                handState.statusBox.innerHTML = "Gesture: Undefined";
-                                handState.chatbotEnable = false;
-                            }
-                        }
-
-                        // Draw hand landmarks on the canvas
-                        if (handsfree.data.hands.multiHandLandmarks) {
-                            for (const landmarks of handsfree.data.hands.multiHandLandmarks) {
-
-                                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
-                                    color: '#00FF00',
-                                    lineWidth: 5
-                                });
-
-                                drawLandmarks(ctx, landmarks, {
-                                    color: '#FF0000',
-                                    lineWidth: 2
-                                });
-                            }
-                        }
-
-                    } else {
-                        handState.statusBox.innerHTML = "Finding Hands...";
-                        if (totalConfidence != 0) {
-                            // console.log("Total Confidence: " + totalConfidence);
-                            // console.log("Total Confidence Count: " + totalConfidenceCount);
-                            // console.log("Confidence: " + ((totalConfidence / totalConfidenceCount) * 100).toFixed(2));
-                        }
                     }
 
                     const time = Date.now();
