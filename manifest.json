@@ -44,7 +44,10 @@
         "assets/js/handsfree/*",
         "assets/js/devices.json",
         "assets/3d/hall_empty.glb",
-        "src/content/mediaSourceSwap.js"
+        "src/content/mediaSourceSwap.js",
+        "/src/models/face-landmarks-detection.js",
+        "/src/models/tf-converter.js",
+        "/src/models/tf-core.js"
     ],
     "content_scripts": [
         {
