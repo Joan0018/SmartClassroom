@@ -2412,7 +2412,7 @@ function handInRealTime() {
                     }else{
                         handState.poseBox.innerHTML = "Finding Person...";
 
-                        if (handState.idleTimeInterval == 0){
+                        if (handState.idleTimeInterval == 0 && document.querySelector('[aria-label="Chat with everyone"]') !== null){
                             handState.idleTimeInterval = new Date(); // user start idle time
                         }
                         
