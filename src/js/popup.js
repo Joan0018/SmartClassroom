@@ -9,10 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			chrome.tabs.sendMessage(tabs[0].id, {data: 'take-attendance'});
 			window.close();
 		}, false);
-		document.querySelector('.popup-overall-analysis').addEventListener('click', function() {
-			chrome.tabs.sendMessage(tabs[0].id, {data: 'del-class'});
-			window.close();
-		}, false);
 
 		let langChoice = document.querySelector('.language-choice');
 		langChoice.onchange = function() {
@@ -38,7 +34,6 @@ function updatePopup(currentLang) {
 	document.querySelector('.popup-lang').innerText = meetLanguage[currentLang]['popup']['popup_lang'];
 	document.querySelector('.popup-face-register').innerText = meetLanguage[currentLang]['popup']['popup_face_register'];
 	document.querySelector('.popup-take-attendance').innerText = meetLanguage[currentLang]['popup']['popup_take_attendance'];
-	document.querySelector('.popup-overall-analysis').innerText = meetLanguage[currentLang]['popup']['popup_overall_analysis'];	
 	document.querySelector('#language').innerText = meetLanguage[currentLang]['popup']['language'];
 }
 
@@ -48,7 +43,6 @@ const meetLanguage = {
 			popup_lang: 'Smart Classroom',
 			popup_face_register: 'Facial Registration',
 			popup_take_attendance: 'Take Attendance',
-			popup_overall_analysis: 'Eye Tracking',
 			language: 'Language',
 		},
 	},
@@ -57,7 +51,6 @@ const meetLanguage = {
 			popup_lang: 'Bilik Darjah Pintar',
 			popup_face_register: 'Pendaftaran Muka',
 			popup_take_attendance: 'Kehadiran',
-			popup_overall_analysis: 'Pengesanan Mata',
 			language: 'Bahasa',
 		},
 	},
@@ -66,7 +59,6 @@ const meetLanguage = {
 			popup_lang: '智慧课堂',
 			popup_face_register: '人脸登记',
 			popup_take_attendance: '出勤登记',
-			popup_overall_analysis: '眼球追踪',
 			language: '语言',
 		},
 	}
