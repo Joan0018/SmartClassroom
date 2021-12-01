@@ -166,8 +166,10 @@ function storeFaceCaptured(){
             facesCapture = [];
 			Utils.log("Save Student Face To Firebase Database")
         });
+		alert("Congratulations, Faces are successfully saved.");
     }
     else{
+		alert("Opps, Error Occur When Capturing the Face. Please Try Again, Thank You.");
         Utils.log("Error in Face Captured")
     }
 
