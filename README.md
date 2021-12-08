@@ -24,7 +24,7 @@
     <br />
     <br />
     <!-- NEED ADDED AFTER FINAL REPORT RUN ORIGINALITY -->
-    <a href="https://github.com/Joan0018/SmartClassroom"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Joan0018/SmartClassroom/tree/main/Report"><strong>Explore the docs »</strong></a>
     <br />
     <a href="#table-of-content"><strong>Explore more »</strong></a>
   </p>
@@ -237,9 +237,9 @@ Lim Kah Yee - [@githubProfile](https://github.com/lky1020)
 
 Project Link: [@VirtualClassroom](https://github.com/Joan0018/SmartClassroom) 
 <!-- Will update after FYP Report done -->
-_For more facial recognition examples, please refer to the [Documentation](https://example.com)_
+_For more facial recognition examples, please refer to the [Documentation](https://github.com/Joan0018/SmartClassroom/blob/main/Report/RSF3_JoanHau_FullText.pdf)_
 <br/>
-_For more hand recognition examples, please refer to the [Documentation](https://example.com)_
+_For more hand recognition examples, please refer to the [Documentation](https://github.com/Joan0018/SmartClassroom/blob/main/Report/RSF3_LimKahYee_Fulltext.pdf)_
 
 <!-- ACKNOWLEDGEMENTS -->
 <a id="acknowledgements"><h2 style="display: inline-block">Acknowledgement</h2></a>
